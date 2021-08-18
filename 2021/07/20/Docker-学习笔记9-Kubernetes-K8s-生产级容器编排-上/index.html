@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            Docker-学习笔记9-Kubernetes-(K8s)-生产级容器编排-上 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Docker-学习笔记9-Kubernetes-(K8s)-生产级容器编排-上</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-20 17:22:24
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Docker学习笔记</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Kubernetes/">Kubernetes</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>3.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>13 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一节的学习中。我们已经可以通过最基本的 Docker Swarm 创建集群，然后在集群里面加入我们需要运行的任务 以及任务的数量 这样我们就创建了一个服务。 当然，这样的方式在我们本地虚拟机的情况下，完全适用，并且对于</p>
+<ul>
+<li>容器</li>
+<li>虚拟主机</li>
+<li>swarm 创建节点组成集群</li>
+</ul>
+<p>有一个很好的理解作用。本节将继续学习关于 <code>Kubernetes (K8s)</code> 的内容。 </p>
+<blockquote>
+<p>Kubernetes 建立在 Google 15年的生产工作负载管理经验的基础上，结合了来自社区的最佳理念和实践。</p>
+</blockquote>
+<h2 id="Kubernetes-K8s"><a href="#Kubernetes-K8s" class="headerlink" title="Kubernetes (K8s)"></a>Kubernetes (K8s)</h2><p>Kubernetes是Google开源的一个容器编排引擎，它支持自动化部署、大规模可伸缩、应用容器化管理。在生产环境中部署一个应用程序时，通常要部署该应用的多个实例以便对应用请求进行负载均衡。<br>在Kubernetes中，我们可以创建多个容器，每个容器里面运行一个应用实例，然后通过内置的负载均衡策略，实现对这一组应用实例的管理、发现、访问，而这些细节都不需要运维人员去进行复杂的手工配置和处理。</p>
+<h2 id="节点与管理节点"><a href="#节点与管理节点" class="headerlink" title="节点与管理节点"></a>节点与管理节点</h2><p>在K8s 集群包括两种类型的资源</p>
+<ul>
+<li>普通节点 Node 一般用于服务</li>
+<li>管理节点 Master 用于管理其他节点</li>
+</ul>
+<h3 id="Master-管理节点"><a href="#Master-管理节点" class="headerlink" title="Master 管理节点"></a>Master 管理节点</h3><p>Master 负责管理集群。 主服务器协调集群中的所有活动，例如调度应用程序、维护应用程序的期望状态、缩放应用程序和推出新的更新。</p>
+<h3 id="Node-服务节点"><a href="#Node-服务节点" class="headerlink" title="Node 服务节点"></a>Node 服务节点</h3><p>Node 是作为 Kubernetes 集群中的工作机器的 VM 或物理计算机。 每个节点都有一个 Kubelet，它是管理节点和与 kubernets 主节点通信的代理。 节点还应该具有处理容器操作的工具，如 Docker </p>
+<p>这个还是和在上一节当中学习的Swarm 虚拟机中通过 <code>docker swarm init xx</code><br>其实还是有类似的地方的。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581682879755.png_imagess" alt="image.png"></p>
+<h2 id="服务执行过程"><a href="#服务执行过程" class="headerlink" title="服务执行过程"></a>服务执行过程</h2><p>当您在 Kubernetes 上部署应用程序时，您告诉主控程序启动应用程序容器。 主服务器安排容器在集群节点上运行。 节点使用主服务器公开的 Kubernetes API 与主服务器通信。 最终用户还可以直接使用 Kubernetes API 与集群交互。</p>
+<h2 id="windows-安装-kubectl-以及-minikube"><a href="#windows-安装-kubectl-以及-minikube" class="headerlink" title="windows 安装 kubectl 以及 minikube"></a>windows 安装 kubectl 以及 minikube</h2><p>若没有安装 Docker-toolbox 的同学请参考并安装：</p>
+<blockquote>
+<p><a href="https://blogs.chaobei.xyz/archives/docker6">https://blogs.chaobei.xyz/archives/docker6</a></p>
+</blockquote>
+<h3 id="下载-kubectl"><a href="#下载-kubectl" class="headerlink" title="下载 kubectl"></a>下载 kubectl</h3><p>Kubernetes 命令行工具 kubectl 允许您针对 Kubernetes 集群运行命令。 您可以使用 kubectl 部署应用程序、检查和管理集群资源以及查看日志。 </p>
+<blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/windows/amd64/kubectl.exe" >https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/windows/amd64/kubectl.exe<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p><strong>修改名称为 kubectl.exe</strong></p>
+<p>复制到和docker-toolbox 一样的目录下，方便执行</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581686413634.png_imagess" alt="image.png"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe version  </span><br><span class="line">Client Version: version.Info&#123;Major:<span class="string">&quot;1&quot;</span>, Minor:<span class="string">&quot;17&quot;</span>, GitVersion:<span class="string">&quot;v1.17.0&quot;</span>, GitCommit:<span class="string">&quot;70132b0f130acc0bed193d9ba59dd186f0e634cf&quot;</span>, GitTreeState:<span class="string">&quot;clean&quot;</span>, BuildDate:<span class="string">&quot;2019-12-07T21:20:10Z&quot;</span>, GoVersion:<span class="string">&quot;go1.13.4&quot;</span>, Compiler:<span class="string">&quot;gc&quot;</span>, Platform:<span class="string">&quot;windows/amd64&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="下载-minikube"><a href="#下载-minikube" class="headerlink" title="下载 minikube"></a>下载 minikube</h3><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/kubernetes/minikube/releases/" >https://github.com/kubernetes/minikube/releases/<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p>选择合适的版本后，下载，并且修改名称为 <code>minikube.exe</code> 放到与上面一样的位置下。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ minikube.exe version                                                                                                 minikube version: v1.7.2</span><br><span class="line">commit: 50d543b5fcb0e1c0d7c27b1398a9a9790df09dfb</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="使用-minikube-创建集群"><a href="#使用-minikube-创建集群" class="headerlink" title="使用 minikube 创建集群"></a>使用 minikube 创建集群</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube start --image-repository=registry.aliyuncs.com/google_containers --registry-mirror=https://fime0zji.mirror.aliyuncs.com --iso-url=https://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/iso/minikube-v1.7.0.iso</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--image-repository</code> 指定使用国内的镜像仓库</li>
+<li><code>--registry-mirror</code> 将指定的地址传递给虚拟机docker 作为拉取镜像的地址</li>
+<li><code>--iso-url</code> 指定minikubo 镜像的地址。</li>
+</ul>
+<p><strong>因为国内防火墙的限制，所以需要将发部分指定为国内地址才可以正常进行。</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ minikube start --image-repository=registry.aliyuncs.com/google_containers --registry-mirror=https://fime0zji.mirror.aliyuncs.com</span><br><span class="line">* Microsoft Windows 10 Pro 10.0.18363 Build 18363 上的 minikube v1.7.2</span><br><span class="line">* Automatically selected the virtualbox driver</span><br><span class="line">* 正在使用镜像存储库 registry.aliyuncs.com/google_containers</span><br><span class="line">* 正在创建 virtualbox 虚拟机（CPUs=2，Memory=2000MB, Disk=20000MB）...</span><br><span class="line">* 找到的网络选项：</span><br><span class="line">  - NO_PROXY=192.168.99.100,192.168.99.102,192.168.99.103</span><br><span class="line">  - no_proxy=192.168.99.100,192.168.99.102,192.168.99.103</span><br><span class="line">* 正在 Docker 19.03.5 中准备 Kubernetes v1.17.2…</span><br><span class="line">  - env NO_PROXY=192.168.99.100,192.168.99.102,192.168.99.103</span><br><span class="line">  - env NO_PROXY=192.168.99.100,192.168.99.102,192.168.99.103</span><br><span class="line">* 正在启动 Kubernetes ...</span><br><span class="line">* Enabling addons: default-storageclass, storage-provisioner</span><br><span class="line">* 等待集群上线...</span><br><span class="line">* 完成！kubectl 已经配置至 <span class="string">&quot;minikube&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>官网在线测试环境 <a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-interactive/" >https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-interactive/<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<h3 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* 正在下载 kubectl v1.17.2</span><br><span class="line">* 正在下载 kubeadm v1.17.2</span><br><span class="line">* 正在下载 kubelet v1.17.2</span><br></pre></td></tr></table></figure>
+
+<p>它可能一直在下载，真的是一直在下，我第一次使用的时候，我足足等了一个小时，现在想起来真的是 MMP 😂</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>找到其所下载的版本</li>
+<li>通过FQ的方式下载到本地，放到cache 缓存文件夹下。</li>
+</ul>
+<blockquote>
+<p>kubeadm <a class="link"   target="_blank" rel="noopener" href="https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubeadm" >https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubeadm<i class="fas fa-external-link-alt"></i></a><br>kubelet <a class="link"   target="_blank" rel="noopener" href="https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubelet" >https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubelet<i class="fas fa-external-link-alt"></i></a><br>kubectl.<a class="link"   target="_blank" rel="noopener" href="http://mirror.azure.cn/kubernetes/kubectl/v1.17.2/bin/linux/amd64/kubectl" >http://mirror.azure.cn/kubernetes/kubectl/v1.17.2/bin/linux/amd64/kubectl<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p>从上面的下载地址里面修改版本号即可下载你想要的版本。</p>
+<p><strong>需要FQ上网才能下载，你懂得</strong></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581772431644.png_imagess" alt="image.png"></p>
+<h3 id="Kubernetes仪表板"><a href="#Kubernetes仪表板" class="headerlink" title="Kubernetes仪表板"></a>Kubernetes仪表板</h3><p><code>minikube dashboard</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ minikube dashboard</span><br><span class="line">* 正在开启 dashboard ...</span><br><span class="line">* Verifying dashboard health ...</span><br><span class="line">* Launching proxy ...</span><br><span class="line">* Verifying proxy health ...</span><br><span class="line">* Opening http://127.0.0.1:63230/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ <span class="keyword">in</span> your default browser...</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://file.chaobei.xyz/blogs/image_1581772618210.png_imagess" alt="image.png"></p>
+<h3 id="集群状态"><a href="#集群状态" class="headerlink" title="集群状态"></a>集群状态</h3><p><code>kubectl cluster-info</code></p>
+<p>因为我们已经安装了与之交互的 <code>kubectl </code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ kubectl.exe cluster-info</span><br><span class="line">Kubernetes master is running at https://192.168.99.113:8443</span><br><span class="line">KubeDNS is running at https://192.168.99.113:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy</span><br><span class="line"></span><br><span class="line">To further debug and diagnose cluster problems, use <span class="string">&#x27;kubectl cluster-info dump&#x27;</span>.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>可以了解到 Kubernets 主节点运行地址以及 Kube 的DNS</p>
+<h3 id="获取所有的节点信息"><a href="#获取所有的节点信息" class="headerlink" title="获取所有的节点信息"></a>获取所有的节点信息</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe get nodes                                      </span><br><span class="line"></span><br><span class="line">NAME       STATUS   ROLES    AGE   VERSION</span><br><span class="line">minikube   Ready    master   31m   v1.17.2</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建APP-镜像"><a href="#创建APP-镜像" class="headerlink" title="创建APP 镜像"></a>创建APP 镜像</h2><p><img src="https://file.chaobei.xyz/blogs/image_1581773695149.png_imagess" alt="image.png"></p>
+<h3 id="构建一个node-应用"><a href="#构建一个node-应用" class="headerlink" title="构建一个node 应用"></a>构建一个node 应用</h3><p>这个应用需要创建在你的minikube 虚拟机内。而不是本地docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">## 创建一个文件夹</span><br><span class="line">mkdir -p nodetest</span><br><span class="line"></span><br><span class="line">## 创建自定义镜像文件并加入以下内容</span><br><span class="line">vi Dockerfile</span><br><span class="line"></span><br><span class="line">FROM nginx</span><br><span class="line">RUN echo &#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27; &gt; /usr/share/nginx/html/index.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="构建测试镜像"><a href="#构建测试镜像" class="headerlink" title="构建测试镜像"></a>构建测试镜像</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mynginx:<span class="built_in">test</span> .</span><br></pre></td></tr></table></figure>
+
+<h3 id="尝试运行测试镜像"><a href="#尝试运行测试镜像" class="headerlink" title="尝试运行测试镜像"></a>尝试运行测试镜像</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name mynginx-d -p 8080:80 mynginx:<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="测试访问"><a href="#测试访问" class="headerlink" title="测试访问"></a>测试访问</h3><p>因为我们的的镜像是跑在虚拟机当中的，获取其网卡地址后，用8080访问</p>
+<h2 id="使用kubectl创建部署"><a href="#使用kubectl创建部署" class="headerlink" title="使用kubectl创建部署"></a>使用kubectl创建部署</h2><p>Kubernetes Pod 是一组由一个或多个容器组成的组，为了管理和联网的目的而连接在一起。</p>
+<p>当我们在 Kubernetes 上创建一个 Deployment 时，Deployment 会创建包含容器的 Pods (而不是直接创建容器)。 每个 Pod 都绑定到节点的预定位置，直到终止(根据重新启动策略)或删除为止。 如果节点出现故障，则在集群中的其他可用节点上调度相同的 Pods。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581828281858.png_imagess" alt="image.png"></p>
+<p>一个 Pod 总是在一个 Node 上运行。 Node 是 Kubernetes 的工作机器，根据集群的不同，它可以是虚拟机，也可以是物理机器。 每个节点由主节点管理。 一个 Node 可以有多个POD，Kubernetes 主机自动处理跨集群中的 Node 的POD调度。 主机的自动调度考虑到了每个节点上的可用资源。</p>
+<h3 id="创建一个POD"><a href="#创建一个POD" class="headerlink" title="创建一个POD"></a>创建一个POD</h3><p>Pod 是一组或多个应用程序容器(如 Docker 或 rkt) ，包括共享存储(卷)、 IP 地址和有关如何运行它们的信息。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment mynode --image=mynginx:<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<p>使用 kubectl create 命令创建一个管理 Pod 的 Deployment。 Pod 基于所提供的 Docker 图像运行一个容器。</p>
+<h3 id="查看部署"><a href="#查看部署" class="headerlink" title="查看部署"></a>查看部署</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe get deployment</span><br><span class="line">NAME     READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">mynode   1/1     1            1           10s</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看POD"><a href="#查看POD" class="headerlink" title="查看POD"></a>查看POD</h3><p><code>kubectl.exe get pods</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe get pods                                                                                                  NAME                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">mynode-5479db549c-fm4qk   1/1     Running   0          9m33s</span><br></pre></td></tr></table></figure>
+
+<h3 id="集群事件"><a href="#集群事件" class="headerlink" title="集群事件"></a>集群事件</h3><p><code>kubectl get events</code></p>
+<h3 id="kubectl-配置"><a href="#kubectl-配置" class="headerlink" title="kubectl 配置"></a>kubectl 配置</h3><p><code>kubectl config view</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe config view                                                                                               apiVersion: v1</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: C:\Users\17639\.minikube\ca.crt</span><br><span class="line">    server: https://192.168.99.100:8443</span><br><span class="line">  name: minikube</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: minikube</span><br><span class="line">    user: minikube</span><br><span class="line">  name: minikube</span><br><span class="line">current-context: minikube</span><br><span class="line">kind: Config</span><br><span class="line">preferences: &#123;&#125;</span><br><span class="line">users:</span><br><span class="line">- name: minikube</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: C:\Users\17639\.minikube\client.crt</span><br><span class="line">    client-key: C:\Users\17639\.minikube\client.key</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建一个服务暴露你的应用"><a href="#创建一个服务暴露你的应用" class="headerlink" title="创建一个服务暴露你的应用"></a>创建一个服务暴露你的应用</h2><p>默认情况下，Pod 只能通过它在 Kubernetes 集群中的内部 IP 地址访问。 要使 hello-node Container 可以从 Kubernetes 虚拟网络外部访问，必须将 Pod 公开为 Kubernetes 服务。</p>
+<p>Kubernetes 的服务是一个抽象概念，它定义了一组逻辑 Pods 和一个访问它们的策略。 服务允许独立的Pods 之间的松散耦合。 服务是使用 YAML (首选)或 JSON 定义的，就像所有的 Kubernetes 对象一样。</p>
+<p>尽管每个 Pod 都有一个唯一的 IP 地址，但是如果没有 Service，这些 IP 不会在集群之外公开。 服务允许应用程序接收流量。 通过在 ServiceSpec 中指定类型，可以以不同的方式公开服务:</p>
+<ul>
+<li>ClusterIP (default) 公开集群中内部 IP 上的服务。 此类型使服务只能从集群内部访问</li>
+<li>NodePort 使用 NAT 公开集群中每个选定节点的同一端口上的服务</li>
+<li>LoadBalancer 负载均衡器，创建一个负载均衡器，并且为服务分配固定IP</li>
+<li>ExternalName</li>
+</ul>
+<h2 id="服务以及标签"><a href="#服务以及标签" class="headerlink" title="服务以及标签"></a>服务以及标签</h2><p><img src="https://file.chaobei.xyz/blogs/image_1581832411699.png_imagess" alt="image.png"></p>
+<p>一组PODS 组成一个服务。服务是一种抽象，它允许POD 在节点关闭时候死亡，以及复制。而不会影响到服务的运行。服务内部依赖的PODS 之间的发现和关联都是由Kubernets Service 来处理的。</p>
+<p>服务使用标签和选择器来匹配一组PODS</p>
+<p>标签是附加在对象上的键值对，可以以任何方式使用。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581832709093.png_imagess" alt="image.png"></p>
+<p>这个图里面我们可以发现，在管理节点里面部署了两个应用。每个应用分别将标签<code>app=B</code> <code>app=A</code> 的所有POD 整理起来组成服务。</p>
+<h2 id="创建服务"><a href="#创建服务" class="headerlink" title="创建服务"></a>创建服务</h2><ul>
+<li><code>kubectl get pods</code> 查看当前所有的POD</li>
+<li><code>kubectl get service</code> 查看当前所有服务</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ kubectl get pods</span><br><span class="line">NAME                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">mynode-5479db549c-lgtfv   1/1     Running   0          56m</span><br><span class="line"></span><br><span class="line">$ kubectl get service</span><br><span class="line">NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   16h</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>kubectl expose deployment mynode --type=NodePort --port=80</code><br>将一个deployment 通过服务的方式暴露出去，暴露端口80,也就是我们容器内部的80端口，mynode 是我们已经部署过的一个应用（资源）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl.exe get service mynginx</span><br><span class="line">NAME      TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">mynode    NodePort   10.111.8.25   &lt;none&gt;        80:30857/TCP   5s</span><br></pre></td></tr></table></figure>
+
+<p>这里发现其将我们的服务暴露到了30857下。</p>
+<blockquote>
+<p>此服务的类型：ClusterIP、NodePort、LoadBalancer或ExternalName。默认值为“ClusterIP”。</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get deployment                                                                                                                                                                                                                     NAME     READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">mynode   1/1     1            1           64m</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://file.chaobei.xyz/blogs/image_1581928004645.png_imagess" alt="image.png"></p>
+<h3 id="nodePort"><a href="#nodePort" class="headerlink" title="nodePort"></a>nodePort</h3><p>　外部机器可访问的端口。<br>比如一个Web应用需要被其他用户访问，那么需要配置type=NodePort，而且配置nodePort=30001，那么其他机器就可以通过浏览器访问scheme://node:30001访问到该服务，例如<a href="http://node:30001。">http://node:30001。</a><br>　例如MySQL数据库可能不需要被外界访问，只需被内部服务访问，那么不必设置NodePort</p>
+<h3 id="targetPort"><a href="#targetPort" class="headerlink" title="targetPort"></a>targetPort</h3><p>　容器的端口（最根本的端口入口），与制作容器时暴露的端口一致（DockerFile中EXPOSE），例如docker.io官方的nginx暴露的是80端口。<br>　docker.io官方的nginx容器的DockerFile参考<a class="link"   target="_blank" rel="noopener" href="https://github.com/nginxinc/docker-nginx" >https://github.com/nginxinc/docker-nginx<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="port"><a href="#port" class="headerlink" title="port"></a>port</h3><p>　kubernetes中的服务之间访问的端口，尽管mysql容器暴露了3306端口（参考<a class="link"   target="_blank" rel="noopener" href="https://github.com/docker-library/mysql/%E7%9A%84DockerFile%EF%BC%89%EF%BC%8C%E4%BD%86%E6%98%AF%E9%9B%86%E7%BE%A4%E5%86%85%E5%85%B6%E4%BB%96%E5%AE%B9%E5%99%A8%E9%9C%80%E8%A6%81%E9%80%9A%E8%BF%8733306%E7%AB%AF%E5%8F%A3%E8%AE%BF%E9%97%AE%E8%AF%A5%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%A4%96%E9%83%A8%E6%9C%BA%E5%99%A8%E4%B8%8D%E8%83%BD%E8%AE%BF%E9%97%AEmysql%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BB%96%E6%B2%A1%E6%9C%89%E9%85%8D%E7%BD%AENodePort%E7%B1%BB%E5%9E%8B" >https://github.com/docker-library/mysql/的DockerFile），但是集群内其他容器需要通过33306端口访问该服务，外部机器不能访问mysql服务，因为他没有配置NodePort类型<i class="fas fa-external-link-alt"></i></a></p>
+<blockquote>
+<p>参考：<a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/devilwind/p/8881201.html" >https://www.cnblogs.com/devilwind/p/8881201.html<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<h3 id="通过标签的方式查询"><a href="#通过标签的方式查询" class="headerlink" title="通过标签的方式查询"></a>通过标签的方式查询</h3><p><code>kubectl describe &lt;type&gt; &lt;name&gt; </code>可以查询到我们想看的信息，若不填写名称，则默认管理节点。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe deployment</span><br><span class="line">Name:                   mynode</span><br><span class="line">Namespace:              default</span><br><span class="line">CreationTimestamp:      Sun, 16 Feb 2020 12:52:50 +0800</span><br><span class="line">Labels:                 app=mynode</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p>可以看到我们部署的资源的标签 <code>app=mynode</code></p>
+<p><code>kubectl get pods -l app=mynode</code> 加入-l 进行标签查询。</p>
+<h2 id="删除服务"><a href="#删除服务" class="headerlink" title="删除服务"></a>删除服务</h2><p><code>kubectl delete service &lt;name&gt;</code> 通过名称删除一个服务</p>
+<h2 id="删除-POD-deployment"><a href="#删除-POD-deployment" class="headerlink" title="删除 POD deployment"></a>删除 POD deployment</h2><p>先删除POD 而后删除 Deployment</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 查看所有POD</span></span><br><span class="line">kubectl get pods</span><br><span class="line"><span class="comment">## 查看所有部署</span></span><br><span class="line">kubectl get deployment</span><br><span class="line"></span><br><span class="line">kubectl delete pod &lt;name&gt;</span><br><span class="line"></span><br><span class="line">kubectl delete deployment  &lt;name&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>官网：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/" >https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/<i class="fas fa-external-link-alt"></i></a></li>
+<li>例子：<a class="link"   target="_blank" rel="noopener" href="https://minikube.sigs.k8s.io/docs/examples/" >https://minikube.sigs.k8s.io/docs/examples/<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+<h2 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h2><h3 id="未使用国内镜像仓库"><a href="#未使用国内镜像仓库" class="headerlink" title="未使用国内镜像仓库"></a>未使用国内镜像仓库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">E0215 13:06:36.509035   15568 cache.go:62] save image to file &quot;gcr.io/k8s-minikube/storage-provisioner:v1.8.1&quot; -&gt; &quot;C:\\Users\\17639\\.minikube\\cache\\images\\gcr.io\\k8s-minikube\\storage-provisioner_v1.8.1&quot; failed: nil image for gcr.io/k8s-minikube/storage-provisioner:v1.8.1: Get https://gcr.io/v2/: dial tcp [2404:6800:4008:c03::52]:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Docker-学习笔记9-Kubernetes-(K8s)-生产级容器编排-上</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-20 17:22:24</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/20/Docker-学习笔记9-Kubernetes-K8s-生产级容器编排-上/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09-Kubernetes-K8s-%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9%E5%AE%B9%E5%99%A8-%E4%B8%8B/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记9-Kubernetes-(K8s)-弹性伸缩容器-下</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08-Docker-Swarm%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记8-Docker-Swarm集群搭建</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-K8s"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes (K8s)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E4%B8%8E%E7%AE%A1%E7%90%86%E8%8A%82%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">节点与管理节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Master-%E7%AE%A1%E7%90%86%E8%8A%82%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">Master 管理节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-%E6%9C%8D%E5%8A%A1%E8%8A%82%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">Node 服务节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">服务执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-%E5%AE%89%E8%A3%85-kubectl-%E4%BB%A5%E5%8F%8A-minikube"><span class="nav-number">5.</span> <span class="nav-text">windows 安装 kubectl 以及 minikube</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-kubectl"><span class="nav-number">5.1.</span> <span class="nav-text">下载 kubectl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-minikube"><span class="nav-number">5.2.</span> <span class="nav-text">下载 minikube</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-minikube-%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">使用 minikube 创建集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">6.1.</span> <span class="nav-text">可能遇到的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">6.2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes%E4%BB%AA%E8%A1%A8%E6%9D%BF"><span class="nav-number">6.3.</span> <span class="nav-text">Kubernetes仪表板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-number">6.4.</span> <span class="nav-text">集群状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AF"><span class="nav-number">6.5.</span> <span class="nav-text">获取所有的节点信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAAPP-%E9%95%9C%E5%83%8F"><span class="nav-number">7.</span> <span class="nav-text">创建APP 镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAnode-%E5%BA%94%E7%94%A8"><span class="nav-number">7.1.</span> <span class="nav-text">构建一个node 应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%B5%8B%E8%AF%95%E9%95%9C%E5%83%8F"><span class="nav-number">7.2.</span> <span class="nav-text">构建测试镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%E9%95%9C%E5%83%8F"><span class="nav-number">7.3.</span> <span class="nav-text">尝试运行测试镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%AE%BF%E9%97%AE"><span class="nav-number">7.4.</span> <span class="nav-text">测试访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8kubectl%E5%88%9B%E5%BB%BA%E9%83%A8%E7%BD%B2"><span class="nav-number">8.</span> <span class="nav-text">使用kubectl创建部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAPOD"><span class="nav-number">8.1.</span> <span class="nav-text">创建一个POD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%83%A8%E7%BD%B2"><span class="nav-number">8.2.</span> <span class="nav-text">查看部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BPOD"><span class="nav-number">8.3.</span> <span class="nav-text">查看POD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%BA%8B%E4%BB%B6"><span class="nav-number">8.4.</span> <span class="nav-text">集群事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kubectl-%E9%85%8D%E7%BD%AE"><span class="nav-number">8.5.</span> <span class="nav-text">kubectl 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E4%BD%A0%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">创建一个服务暴露你的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E4%BB%A5%E5%8F%8A%E6%A0%87%E7%AD%BE"><span class="nav-number">10.</span> <span class="nav-text">服务以及标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1"><span class="nav-number">11.</span> <span class="nav-text">创建服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nodePort"><span class="nav-number">11.1.</span> <span class="nav-text">nodePort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#targetPort"><span class="nav-number">11.2.</span> <span class="nav-text">targetPort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#port"><span class="nav-number">11.3.</span> <span class="nav-text">port</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%A0%87%E7%AD%BE%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9F%A5%E8%AF%A2"><span class="nav-number">11.4.</span> <span class="nav-text">通过标签的方式查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%9C%8D%E5%8A%A1"><span class="nav-number">12.</span> <span class="nav-text">删除服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-POD-deployment"><span class="nav-number">13.</span> <span class="nav-text">删除 POD deployment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">14.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91"><span class="nav-number">15.</span> <span class="nav-text">遇到的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E4%BD%BF%E7%94%A8%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93"><span class="nav-number">15.1.</span> <span class="nav-text">未使用国内镜像仓库</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

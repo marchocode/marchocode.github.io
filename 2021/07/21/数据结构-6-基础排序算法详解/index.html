@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            数据结构-6-基础排序算法详解 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据结构-6-基础排序算法详解</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-21 17:08:30
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F/">冒泡排序</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E4%BC%98%E5%8C%96/">冒泡排序优化</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/">基础算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>说到前面，我们已经详解了几种数据结构、包括数组、链表、二叉树、B树、B+树等基本数据结构、当然，我们这节课也叫做数据结构与算法、肯定会包含算法的相关知识、因为在之前已经了解和学习过有关时间复杂度的相关内容。当然也是和算法密切相关的。时间复杂度和空间复杂度共同决定一个算法的好坏、本节，我们将学习有关数组元素排序的几种常用算法。以及使用图画的方式展示出来。为了我们更好的理解与使用。</p>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>听这个名字可以大概猜到。就像湖底水草上面的水泡一样，从水底到水面的一个过程。就是排序的其中一轮。我们来画图理解一下：</p>
+<p>假设我们有这样一个长度的数组：需要将元素 <code>顺序排列（从小到大）</code><br><img src="https://file.chaobei.xyz/blogs/image_1587566865286.png_imagess" alt="image.png"></p>
+<p>指定一个<code>本轮循环的元素j</code> 与 <code>j+1 元素</code> 进行比较。若大于则换位。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1587567757887.png_imagess" alt="image.png"></p>
+<p>这里明显 <code>49&gt;38</code> 调换位置。<br><img src="https://file.chaobei.xyz/blogs/image_1587567725341.png_imagess" alt="image.png"></p>
+<p>指针位移，再次开始与 <code>i+1</code> 个元素比较；<br><img src="https://file.chaobei.xyz/blogs/image_1587567836521.png_imagess" alt="image.png"></p>
+<p><code>65&gt;49</code> 很显然，不进行换位。下移一位。<br><img src="https://file.chaobei.xyz/blogs/image_1587568002715.png_imagess" alt="image.png"></p>
+<p><code>97&gt;65</code> 则不进行换位。位移下一位。<br><img src="https://file.chaobei.xyz/blogs/image_1587568099928.png_imagess" alt="image.png"></p>
+<p>发现这里需要进行换位操作。因为<code>97&gt;76</code><br><img src="https://file.chaobei.xyz/blogs/image_1587568233266.png_imagess" alt="image.png"></p>
+<p>位移下一位。<br><img src="https://file.chaobei.xyz/blogs/image_1587568288695.png_imagess" alt="image.png"></p>
+<p>比较后，进行换位操作。<br><img src="https://file.chaobei.xyz/blogs/image_1587568347322.png_imagess" alt="image.png"></p>
+<p>位移下一位。。。。这里省略步骤 到最后一步我们会发现<br><img src="https://file.chaobei.xyz/blogs/image_1587568512375.png_imagess" alt="image.png"></p>
+<p>当指针到达(len-1)位置的时候，其实已经比较完了。所以我们通过这一轮的冒泡排序。一个最大的元素已经被确认出来了。</p>
+<p>重复以上的过程，从第二个元素继续开始。再次重复这样的过程。实现排序。</p>
+<p>下次的终止位置。则只需要比较到上一次位置-1处即可。</p>
+<h3 id="JAVA-代码示例。"><a href="#JAVA-代码示例。" class="headerlink" title="JAVA 代码示例。"></a>JAVA 代码示例。</h3><h4 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arrays = &#123;<span class="number">49</span>, <span class="number">38</span>, <span class="number">65</span>, <span class="number">97</span>, <span class="number">76</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort1</span><span class="params">(<span class="keyword">int</span>[] arrays)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> allChange = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;arrays.length;i++) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span> ;j&lt;arrays.length-i-<span class="number">1</span>;j++) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (arrays[j] &gt; arrays[j+<span class="number">1</span>]) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> temp = arrays[j];</span><br><span class="line">                arrays[j] = arrays[j+<span class="number">1</span>];</span><br><span class="line">                arrays[j+<span class="number">1</span>] = temp;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            allChange++;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(Arrays.toString(arrays));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;总比较次数：&quot;</span>+allChange);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一版的冒泡排序通过两个FOR 循环的形式实现</p>
+<p><code>外层 for</code>循环用于控制整体程序的运行次数。也就是数组的长度。<br><code>内层 for</code>用于与后面一位数比较大小。从而实现交换的逻辑。 </p>
+<blockquote>
+<p>如此一来，第一版冒泡排序的时间复杂度为 <code>O(N的平方)</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">38</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">38</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">38</span>, <span class="number">49</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">38</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">13</span>, <span class="number">27</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">----------------------------------注意这段分隔符的意义</span><br><span class="line">[<span class="number">13</span>, <span class="number">27</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">13</span>, <span class="number">27</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">[<span class="number">13</span>, <span class="number">27</span>, <span class="number">38</span>, <span class="number">49</span>, <span class="number">49</span>, <span class="number">65</span>, <span class="number">76</span>, <span class="number">97</span>]</span><br><span class="line">总比较次数：<span class="number">28</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="第二版"><a href="#第二版" class="headerlink" title="第二版"></a>第二版</h4><p>通过观察控制台的输出，我们发现，其实在循环进行到<code>第5次</code>的时候，其实数组已经变得井然有序了。但是我们的算法仍然兢兢业业的做<code>4次</code>无用功。所以这里就是一个需要优化的地方。</p>
+<p>通过加入一个<code>isChange</code>的变量。用来记录本次循环是否发生了变化。若没有发生元素的交换。则后面的循环直接跳出即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arrays = &#123;<span class="number">49</span>, <span class="number">38</span>, <span class="number">65</span>, <span class="number">97</span>, <span class="number">76</span>, <span class="number">13</span>, <span class="number">27</span>, <span class="number">49</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort2</span><span class="params">(<span class="keyword">int</span>[] arrays)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> allChange = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arrays.length; i++) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> isChange = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; arrays.length - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (arrays[j] &gt; arrays[j + <span class="number">1</span>]) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> temp = arrays[j];</span><br><span class="line">                arrays[j] = arrays[j + <span class="number">1</span>];</span><br><span class="line">                arrays[j + <span class="number">1</span>] = temp;</span><br><span class="line"></span><br><span class="line">                isChange = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            allChange++;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(Arrays.toString(arrays));</span><br><span class="line">        <span class="keyword">if</span> (isChange) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;总比较次数：&quot;</span>+allChange);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过控制台输出的内容我们不难发现。其实循环在第五次的时候，已经完成了元素的交换，但是为何又输出了一遍？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[38, 49, 65, 76, 13, 27, 49, 97]</span><br><span class="line">[38, 49, 65, 13, 27, 49, 76, 97]</span><br><span class="line">[38, 49, 13, 27, 49, 65, 76, 97]</span><br><span class="line">[38, 13, 27, 49, 49, 65, 76, 97]</span><br><span class="line">[13, 27, 38, 49, 49, 65, 76, 97]</span><br><span class="line">--------------------------------</span><br><span class="line">[13, 27, 38, 49, 49, 65, 76, 97]</span><br></pre></td></tr></table></figure>
+<p>其实在第四遍走完后，排序已经是完成了的。但是因为不知道下次时候会有元素的交换，所以在此走了一遍，因为没有交换元素，则在第五遍执行完毕后，跳出循环。</p>
+<h3 id="再次优化，有序长度的界定"><a href="#再次优化，有序长度的界定" class="headerlink" title="再次优化，有序长度的界定"></a>再次优化，有序长度的界定</h3><p>何谓有序长度的界定呢？我们重新选择一个数组来打印一次，发现这里面需要优化的位置点。</p>
+<blockquote>
+<p>选定一个特殊数组：[3,4,2,1,5,6,7,8]</p>
+</blockquote>
+<p>通过短暂的观察，我们可以发现，<code>5,6,7,8</code> 这几位元素已经是处于一个有序的状态的。那么我们现有的算法，怎么去对于这些有序序列的比较。从而优化性能呢？我们先用这个数组来跑一遍</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">------------------------</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br></pre></td></tr></table></figure>
+<p>通过测试后发现，现有的算法对于数据的比较只需要三次即可排列好这个数组，但是我们会发现。在执行第一遍的时候，若遇到一些有序的元素。</p>
+<blockquote>
+<p>例如：第一遍已经产生的 [4, 5, 6, 7, 8] 算法还是在第二遍执行的时候，重复进行了比较。我们能不能想个办法。跳过这些重复的内容呢？</p>
+</blockquote>
+<p><strong>我们可以控制内层比较的长度啊！！！</strong></p>
+<blockquote>
+<p>想要跳过一些元素的比较，那么就需要得到这个有序内容的长度。从而控制第二层循环，不要比较这些有序长度即可。</p>
+</blockquote>
+<h4 id="如何确定有序长度。"><a href="#如何确定有序长度。" class="headerlink" title="如何确定有序长度。"></a>如何确定有序长度。</h4><p>当然是若发生比较的时候，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort3</span><span class="params">(<span class="keyword">int</span>[] array)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//用来记录最后一次发生变化的位置</span></span><br><span class="line">    <span class="keyword">int</span> lastChangeIndex = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//用来表示需要比较的长度。只需要比较到之前即可</span></span><br><span class="line">    <span class="keyword">int</span> sortLength = array.length - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> allChange = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> isChange = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>;j&lt; sortLength;j++) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (array[j] &gt; array[j + <span class="number">1</span>]) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> temp = array[j];</span><br><span class="line">                array[j] = array[j + <span class="number">1</span>];</span><br><span class="line">                array[j + <span class="number">1</span>] = temp;</span><br><span class="line"></span><br><span class="line">                isChange = <span class="keyword">false</span>;</span><br><span class="line">                <span class="comment">//记录发生变化的位置</span></span><br><span class="line">                lastChangeIndex = j;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//用于记录比较次数</span></span><br><span class="line">            allChange++;</span><br><span class="line">        &#125;</span><br><span class="line">        sortLength = lastChangeIndex;</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">        <span class="comment">//若无改变则跳出循环</span></span><br><span class="line">        <span class="keyword">if</span> (isChange) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;总比较次数：&quot;</span>+allChange);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终我们得出，我们的算法只需要运行10次比较。即可排序完成。再来看看我们第二版本的算法次数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">--------------------- 第三版</span><br><span class="line">[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">总比较次数：<span class="number">10</span></span><br><span class="line"></span><br><span class="line">----------------------第二版</span><br><span class="line">[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">总比较次数：<span class="number">22</span></span><br><span class="line">----------------------第一版</span><br><span class="line">[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">总比较次数：<span class="number">28</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过一次一次的优化，使得我们的冒泡排序从最初的比较次数<code>28</code>，通过加入有无调换顺序的判断后 优化为<code>22</code> 再到记录有序序列的下标。变为更优化的<code>10</code>次。是算法优化的结果，也是我们在慢慢进步的效果。</p>
+<p>下节课我们将学习到一个更加优化的排序算法。<code>鸡尾酒排序</code></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：数据结构-6-基础排序算法详解</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-21 17:08:30</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/21/数据结构-6-基础排序算法详解/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-7-%E9%B8%A1%E5%B0%BE%E9%85%92%E6%8E%92%E5%BA%8F%E6%B3%95/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-7-鸡尾酒排序法</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-5-%E5%93%88%E5%B8%8C%E8%A1%A8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-5-哈希表</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">冒泡排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%E3%80%82"><span class="nav-number">2.1.</span> <span class="nav-text">JAVA 代码示例。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%89%88"><span class="nav-number">2.1.1.</span> <span class="nav-text">第一版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%89%88"><span class="nav-number">2.1.2.</span> <span class="nav-text">第二版</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E6%AC%A1%E4%BC%98%E5%8C%96%EF%BC%8C%E6%9C%89%E5%BA%8F%E9%95%BF%E5%BA%A6%E7%9A%84%E7%95%8C%E5%AE%9A"><span class="nav-number">2.2.</span> <span class="nav-text">再次优化，有序长度的界定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E6%9C%89%E5%BA%8F%E9%95%BF%E5%BA%A6%E3%80%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">如何确定有序长度。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

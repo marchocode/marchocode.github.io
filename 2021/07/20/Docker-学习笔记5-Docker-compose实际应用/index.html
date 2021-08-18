@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            Docker-学习笔记5-Docker-compose实际应用 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Docker-学习笔记5-Docker-compose实际应用</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-20 17:11:06
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Docker学习笔记</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/">Compose多容器编排</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.3k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>10 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上节的内容中，我们已经通过一个简单的实例，将Docker-compose 进行了实际的应用。这一小节中。我们将通过学习和了解，着重认识容器的编排，上一节只算是一个小小的测试。在这一节中。我们将用最常见的技术。</p>
+<ul>
+<li>Springboot 作为后端应用</li>
+<li>Nginx 作为反向代理</li>
+<li>Mysql 持久化数据</li>
+</ul>
+<h2 id="Springboot-后端应用"><a href="#Springboot-后端应用" class="headerlink" title="Springboot 后端应用"></a>Springboot 后端应用</h2><p>引入JPA支持，以及MySQL的驱动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>配置JPA 的基本属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring.jpa.properties.hibernate.hbm2ddl.auto=update</span><br><span class="line">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect</span><br><span class="line">spring.jpa.show-sql=true</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义控制器"><a href="#定义控制器" class="headerlink" title="定义控制器"></a>定义控制器</h3><p>通过定义这样一个简单的控制器，访问<code>/index</code> 后就往数据库插入一条访问记录。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserRep userRep;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/index&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        UserEntity userEntity = <span class="keyword">new</span> UserEntity();</span><br><span class="line"></span><br><span class="line">        userEntity.setName(<span class="string">&quot;guest&quot;</span>);</span><br><span class="line">        userEntity.setCreateTime(<span class="keyword">new</span> Date());</span><br><span class="line">        userEntity.setIp(request.getRemoteAddr());</span><br><span class="line">        userEntity.setStatus(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        userRep.save(userEntity);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello-docker-nginx&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实例代码：</p>
+</blockquote>
+<h3 id="自定义镜像"><a href="#自定义镜像" class="headerlink" title="自定义镜像"></a>自定义镜像</h3><p>是否记得上次我们在使用 <code>Dockerfile</code> 自定义镜像？请参照：</p>
+<blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/ChromeT/p/12283482.html#_label1_0" >https://www.cnblogs.com/ChromeT/p/12283482.html#_label1_0<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p>这里我就不重复写了，差不多都一样的。</p>
+<p><code>Dockerfile</code> 还是放置到 <code>src/docker/</code> 下，不管放置到哪儿，只要你YML里面配置了一样的位置即可。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 依赖基础镜像 maven 3.5 这个镜像里面已经包含有java</span></span><br><span class="line"><span class="keyword">FROM</span> maven:<span class="number">3.5</span>-jdk-<span class="number">8</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://file.chaobei.xyz/blogs/image_1581312555601.png_imagess" alt="image.png"></p>
+<p>这是可能会有疑惑？为什么看不到 <code>RUN</code> <code>CMD</code> 命令了，因为我们在后面将这些命令都指定到 <code>docker-compose.yml</code> 文件里面了。</p>
+<h2 id="配置NGINX"><a href="#配置NGINX" class="headerlink" title="配置NGINX"></a>配置NGINX</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.0&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my-nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.13</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:80</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8443</span><span class="string">:443</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/conf.d:/etc/nginx/conf.d</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://hub.docker.com/_/nginx?tab=tags" >https://hub.docker.com/_/nginx?tab=tags<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p>简单说下一下：</p>
+<h3 id="version"><a href="#version" class="headerlink" title="version"></a>version</h3><p>这个就简单了，指明 <code>docker-compose</code> 文件的语法信息。当然，这个版本信息也不能忽视，从官网的一张表里面说明你的docker 版本与之对应的yml 文件的版本。需要查询自己docker 的版本后填写。</p>
+<p><strong>我这里是1.13.1</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker -v</span></span><br><span class="line">Docker version 1.13.1, build 4ef4b30/1.13.1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://file.chaobei.xyz/blogs/image_1581249892143.png_imagess" alt="image.png"></p>
+<h3 id="container-name"><a href="#container-name" class="headerlink" title="container_name"></a>container_name</h3><p>这个就字面意思了，容器的名称</p>
+<h3 id="image"><a href="#image" class="headerlink" title="image"></a>image</h3><p>指定容器的构建镜像</p>
+<h3 id="restart"><a href="#restart" class="headerlink" title="restart"></a>restart</h3><figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">restart: <span class="string">&quot;no&quot;</span></span><br><span class="line">restart: always</span><br><span class="line">restart: on-failure</span><br><span class="line">restart: unless-stopped</span><br></pre></td></tr></table></figure>
+
+<p>No 是默认的重新启动策略，在任何情况下都不会重新启动容器。<br>always，若没有启动成功，则容器始终重新启动。 (常用)<br>如果退出代码指示出现 on-failure 错误，则启动失败策略重新启动容器。</p>
+<h3 id="ports"><a href="#ports" class="headerlink" title="ports"></a>ports</h3><p>将宿主主机上的端口与容器服务端口进行绑定，比如 <code>8080：80</code> 就是将宿主主机的8080端口绑定到这个服务的80端口</p>
+<h3 id="volumes"><a href="#volumes" class="headerlink" title="volumes"></a>volumes</h3><p>挂载主机路径或命名卷，指定为服务的子选项。<br>就意思说：把指定的路径挂载到服务当中。在这个例子里， </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nginx/conf.d:/etc/nginx/conf.d </span><br></pre></td></tr></table></figure>
+<p>就是将本文件夹<code>./nginx/conf.d</code> 映射到（挂载）到容器的<code>/etc/nginx/conf.d</code></p>
+<p>就是把NGINX 的配置文件夹给映射出来了。方便我们修改。</p>
+<h2 id="配置转发"><a href="#配置转发" class="headerlink" title="配置转发"></a>配置转发</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    charset utf-8;</span><br><span class="line">    access_log off;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line"></span><br><span class="line">        proxy_set_header Host $host:$server_port;</span><br><span class="line">        proxy_set_header X-Forwarded-Host $server_name;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line"></span><br><span class="line">        proxy_pass http://app:8080;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个就简单了。没啥可说的，<code>proxy_pass http://app:8080;</code>主要一下，因为app 这个服务和nginx 不在一个服务内，所以需要通过服务名的方式进行转发。</p>
+<h2 id="配置MYSQL"><a href="#配置MYSQL" class="headerlink" title="配置MYSQL"></a>配置MYSQL</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">mysql:</span></span><br><span class="line">  <span class="attr">container_name:</span> <span class="string">my-mysql</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">mysql:8.0</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">MYSQL_DATABASE:</span> <span class="string">demo</span></span><br><span class="line">    <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">MYSQL_ROOT_HOST:</span> <span class="string">&#x27;%&#x27;</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/root/database/mysql:/var/lib/mysql</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="environment"><a href="#environment" class="headerlink" title="environment"></a>environment</h3><p>环境变量，这个主要用于设置一些比如数据库的名称、以及用户密码等信息。</p>
+<blockquote>
+<p>详见MYSQL 环境变量 <a class="link"   target="_blank" rel="noopener" href="https://hub.docker.com/_/mysql?tab=description" >https://hub.docker.com/_/mysql?tab=description<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MYSQL_ROOT_PASSWORD</span><br><span class="line">这个变量是强制性的，它指定将为 MySQL root 超级用户帐户设置的密码。</span><br><span class="line"></span><br><span class="line">MYSQL_DATABASE</span><br><span class="line">此变量是可选的，并允许您指定要在映像启动时创建的数据库的名称。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li>因为容器停止后，其里面的数据也会消失，这是我们所不能接受的，所以，将MYSQL 里面用来存储数据库的路径映射出来，映射到本机上我们所熟知的位置，这样就好了。</li>
+<li><code>mkdir -p /root/database/mysql/</code> 创建本地路径</li>
+<li><code>/root/database/mysql:/var/lib/mysql</code> 组成映射关系。</li>
+</ul>
+<h2 id="配置后台Springboot"><a href="#配置后台Springboot" class="headerlink" title="配置后台Springboot"></a>配置后台Springboot</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">app:</span></span><br><span class="line">  <span class="attr">container_name:</span> <span class="string">my-app</span></span><br><span class="line">  <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">  <span class="attr">working_dir:</span> <span class="string">/app</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">./:/app</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">~/.m2:/root/.m2</span></span><br><span class="line">  <span class="attr">expose:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;8080&quot;</span></span><br><span class="line">  <span class="attr">depends_on:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">nginx</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">mysql</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">mvn</span> <span class="string">clean</span> <span class="string">spring-boot:run</span> <span class="string">-Dspring-boot.run.profiles=docker</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="build"><a href="#build" class="headerlink" title="build"></a>build</h3><p>指定自定义镜像文件 <code>Dockerfile</code> 的目录，用于构建镜像</p>
+<h3 id="working-dir"><a href="#working-dir" class="headerlink" title="working_dir"></a>working_dir</h3><p>指定功能目录</p>
+<h3 id="expose"><a href="#expose" class="headerlink" title="expose"></a>expose</h3><p>在不将端口发布到主机的情况下公开端口——它们只能被链接的服务访问。 只能指定内部端口。</p>
+<h3 id="depends-on"><a href="#depends-on" class="headerlink" title="depends_on"></a>depends_on</h3><p>启动顺序，意思是需要先启动 nginx mysql 而后启动本应用。</p>
+<h3 id="command"><a href="#command" class="headerlink" title="command"></a>command</h3><p>容器启动执行命令进行重写，其实就是将这个JAR包运行起来。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p><code>~/.m2:/root/.m2</code> 其实就是把宿主主机的Maven仓库映射到镜像内。<br><code>./:/app</code> 其实就是将当前目录挂载到容器内 /app 下</p>
+<h2 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 克隆仓库到服务器</span></span><br><span class="line">git <span class="built_in">clone</span>  https://gitee.com/mrc1999/springboot-nginx-mysql-docker-compose.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> springboot-nginx-mysql-docker-compose</span><br><span class="line"></span><br><span class="line"><span class="comment">## 运行docker-compose 进行编排</span></span><br><span class="line">docker-compose up</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通过运行UP命令进行容器的编排与部署，观察打印的内容是否正确，若没有错误，则出现以下部分内容。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">my-app   | Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/3.3.9/maven-model-3.3.9.jar (164 kB at 155 kB/s)</span><br><span class="line">my-app   | </span><br><span class="line">my-app   |   .   ____          _            __ _ _</span><br><span class="line">my-app   |  /\\ / ___<span class="string">&#x27;_ __ _ _(_)_ __  __ _ \ \ \ \</span></span><br><span class="line"><span class="string">my-app   | ( ( )\___ | &#x27;</span>_ | <span class="string">&#x27;_| | &#x27;</span>_ \/ _` | \ \ \ \</span><br><span class="line">my-app   |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )</span><br><span class="line">my-app   |   <span class="string">&#x27;  |____| .__|_| |_|_| |_\__, | / / / /</span></span><br><span class="line"><span class="string">my-app   |  =========|_|==============|___/=/_/_/_/</span></span><br><span class="line"><span class="string">my-app   |  :: Spring Boot ::        (v2.1.6.RELEASE)</span></span><br><span class="line"><span class="string">my-app   | </span></span><br><span class="line"><span class="string">my-app   | 2020-02-10 03:39:14.574  INFO 1 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication on f27ac469d127 with PID 1 (/app/target/classes started by root in /app)</span></span><br><span class="line"><span class="string">my-app   | 2020-02-10 03:39:14.588  INFO 1 --- [           main] com.example.demo.DemoApplication         : The following profiles are active: docker</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>Springboot 启动正常，因为这个时候是直接运行容器服务的，我们可以尝试使用 CTRL+C 进行关闭，而后通过后台的方式运行</p>
+<h3 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h3><p><code>docker-compose up -d</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]<span class="comment"># docker-compose up -d</span></span><br><span class="line">my-nginx is up-to-date</span><br><span class="line">Starting my-mysql ... <span class="keyword">done</span></span><br><span class="line">Starting my-app   ... <span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="检查容器运行情况"><a href="#检查容器运行情况" class="headerlink" title="检查容器运行情况"></a>检查容器运行情况</h3><p><code>docker-compose ps</code> 查看当前编排容器的运行情况</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]<span class="comment"># docker-compose ps</span></span><br><span class="line">  Name                Command               State                      Ports                   </span><br><span class="line">-----------------------------------------------------------------------------------------------</span><br><span class="line">my-app     /usr/<span class="built_in">local</span>/bin/mvn-entrypo ...   Up      8080/tcp                                   </span><br><span class="line">my-mysql   docker-entrypoint.sh mysqld      Up      0.0.0.0:3306-&gt;3306/tcp, 33060/tcp          </span><br><span class="line">my-nginx   nginx -g daemon off;             Up      0.0.0.0:8443-&gt;443/tcp, 0.0.0.0:8080-&gt;80/tcp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a>docker ps</h3><p>通过运行 <code>docker-ps</code> 后发现，所有的镜像也已经存在。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS              PORTS                                         NAMES</span><br><span class="line">f27ac469d127        springboot-nginx-mysql-docker-compose_app   &quot;/usr/local/bin/mv...&quot;   6 minutes ago       Up 31 seconds       8080/tcp                                      my-app</span><br><span class="line">5c0e28096c35        mysql:8.0                                   &quot;docker-entrypoint...&quot;   6 minutes ago       Up 32 seconds       0.0.0.0:3306-&gt;3306/tcp, 33060/tcp             my-mysql</span><br><span class="line">2565244279b4        nginx:1.13                                  &quot;nginx -g &#x27;daemon ...&quot;   6 minutes ago       Up 30 seconds       0.0.0.0:8080-&gt;80/tcp, 0.0.0.0:8443-&gt;443/tcp   my-nginx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-compose-down"><a href="#docker-compose-down" class="headerlink" title="docker-compose down"></a>docker-compose down</h3><p>停止容器并且移除容器</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]<span class="comment"># docker-compose down</span></span><br><span class="line">Stopping my-app   ... <span class="keyword">done</span></span><br><span class="line">Stopping my-mysql ... <span class="keyword">done</span></span><br><span class="line">Stopping my-nginx ... <span class="keyword">done</span></span><br><span class="line">Removing my-app   ... <span class="keyword">done</span></span><br><span class="line">Removing my-mysql ... <span class="keyword">done</span></span><br><span class="line">Removing my-nginx ... <span class="keyword">done</span></span><br><span class="line">Removing network springboot-nginx-mysql-docker-compose_default</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="尝试发现"><a href="#尝试发现" class="headerlink" title="尝试发现"></a>尝试发现</h2><h3 id="MYSQL-数据库持久化-？"><a href="#MYSQL-数据库持久化-？" class="headerlink" title="MYSQL 数据库持久化 ？"></a>MYSQL 数据库持久化 ？</h3><p>我们通过使用 <code>volumes</code> 将宿主主机的一个文件夹挂载到 <code>my-mysql</code> 容器下的 <code>/var/lib/mysql</code> 目录，那我们产生的数据呢？是否正常保存了么？</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]<span class="comment"># ls /root/database/mysql/</span></span><br><span class="line">auto.cnf       binlog.000003  ca.pem           demo            ib_logfile0  <span class="comment">#innodb_temp  performance_schema  server-cert.pem  undo_001</span></span><br><span class="line">binlog.000001  binlog.index   client-cert.pem  ib_buffer_pool  ib_logfile1  mysql         private_key.pem     server-key.pem   undo_002</span><br><span class="line">binlog.000002  ca-key.pem     client-key.pem   ibdata1         ibtmp1       mysql.ibd     public_key.pem      sys</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通过发现后得知，宿主主机的目录下已经产生了demo 的一个数据库。我们的挂载没有问题，下次还是从这里面读取即可。所以持久化数据没有问题。</p>
+<h3 id="working-dir-有啥用？"><a href="#working-dir-有啥用？" class="headerlink" title="working_dir 有啥用？"></a>working_dir 有啥用？</h3><p>在容器运行的时候，我们尝试使用 <code>docker exec -it my-app bash</code> 使用命令行连接容器后，我们会发现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@mrclinux springboot-nginx-mysql-docker-compose]# docker exec -it my-app bash</span><br><span class="line">root@f27ac469d127:/app# </span><br><span class="line">root@f27ac469d127:/app# </span><br><span class="line">root@f27ac469d127:/app# ls</span><br><span class="line">Dockerfile  docker-compose.yml	maven  mvnw  mvnw.cmd  nginx  pom.xml  src  target</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>原来通过 working_dir 其实就是将当前目录的所有文件挂载到容器 /app 下。里面存在的文件，均是我通过映射拿进去的文件。</strong></p>
+<p>##参考以及小结</p>
+<p>通过这一节学习，基本上容器部署这些主流的MYSQL 以及NGINX 等已经全部没有任何问题了。学习到了卷的挂载。以及MYSQL 持久化数据的方式<br>要是遇到一些新的命令或者语法，再来记录吧~</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>DOCKER 官网 <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/" >https://docs.docker.com/compose/compose-file/<i class="fas fa-external-link-alt"></i></a><br>DOCKER 官网 <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/storage/volumes/" >https://docs.docker.com/storage/volumes/<i class="fas fa-external-link-alt"></i></a><br>DOCKER 官网 <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/compose/gettingstarted/" >https://docs.docker.com/compose/gettingstarted/<i class="fas fa-external-link-alt"></i></a></p>
+<p>纯洁的微笑 <a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/ityouknow/p/8661644.html" >https://www.cnblogs.com/ityouknow/p/8661644.html<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="码云示例"><a href="#码云示例" class="headerlink" title="码云示例"></a>码云示例</h3><p><a class="link"   target="_blank" rel="noopener" href="https://gitee.com/mrc1999/springboot-nginx-mysql-docker-compose" >https://gitee.com/mrc1999/springboot-nginx-mysql-docker-compose<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Docker-学习笔记5-Docker-compose实际应用</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-20 17:11:06</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/20/Docker-学习笔记5-Docker-compose实际应用/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06-Windows%E7%89%88%E5%B0%9D%E9%B2%9C/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记6-Windows版尝鲜</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04-Docker-Compose%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记4-Docker-Compose多容器编排</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Springboot-%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">Springboot 后端应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">定义控制器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F"><span class="nav-number">2.2.</span> <span class="nav-text">自定义镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AENGINX"><span class="nav-number">3.</span> <span class="nav-text">配置NGINX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#version"><span class="nav-number">3.1.</span> <span class="nav-text">version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#container-name"><span class="nav-number">3.2.</span> <span class="nav-text">container_name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#image"><span class="nav-number">3.3.</span> <span class="nav-text">image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#restart"><span class="nav-number">3.4.</span> <span class="nav-text">restart</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ports"><span class="nav-number">3.5.</span> <span class="nav-text">ports</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volumes"><span class="nav-number">3.6.</span> <span class="nav-text">volumes</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BD%AC%E5%8F%91"><span class="nav-number">4.</span> <span class="nav-text">配置转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEMYSQL"><span class="nav-number">5.</span> <span class="nav-text">配置MYSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#environment"><span class="nav-number">5.1.</span> <span class="nav-text">environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">注意点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%90%8E%E5%8F%B0Springboot"><span class="nav-number">6.</span> <span class="nav-text">配置后台Springboot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#build"><span class="nav-number">6.1.</span> <span class="nav-text">build</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#working-dir"><span class="nav-number">6.2.</span> <span class="nav-text">working_dir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#expose"><span class="nav-number">6.3.</span> <span class="nav-text">expose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#depends-on"><span class="nav-number">6.4.</span> <span class="nav-text">depends_on</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#command"><span class="nav-number">6.5.</span> <span class="nav-text">command</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">6.6.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">7.</span> <span class="nav-text">运行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-number">7.1.</span> <span class="nav-text">后台运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%83%85%E5%86%B5"><span class="nav-number">7.2.</span> <span class="nav-text">检查容器运行情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-ps"><span class="nav-number">7.3.</span> <span class="nav-text">docker ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-compose-down"><span class="nav-number">7.4.</span> <span class="nav-text">docker-compose down</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E5%8F%91%E7%8E%B0"><span class="nav-number">8.</span> <span class="nav-text">尝试发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MYSQL-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8C%81%E4%B9%85%E5%8C%96-%EF%BC%9F"><span class="nav-number">8.1.</span> <span class="nav-text">MYSQL 数据库持久化 ？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#working-dir-%E6%9C%89%E5%95%A5%E7%94%A8%EF%BC%9F"><span class="nav-number">8.2.</span> <span class="nav-text">working_dir 有啥用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.3.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%81%E4%BA%91%E7%A4%BA%E4%BE%8B"><span class="nav-number">8.4.</span> <span class="nav-text">码云示例</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

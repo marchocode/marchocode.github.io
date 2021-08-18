@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            数据结构-3-二叉查找树-红黑树 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据结构-3-二叉查找树-红黑树</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-21 14:51:52
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/">二叉查找树</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E6%97%8B%E8%BD%AC%E4%B8%8E%E5%8F%98%E8%89%B2/">旋转与变色</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>这里再来复习一下二叉树的概念：</p>
+<ol>
+<li>每个节点下子元素不可超过两个，必须是0个或者一个或则两个</li>
+<li>二叉树是一种有序树。</li>
+</ol>
+<p>理解了这些，我们这节要学习的内容就是有关于二叉查找树以及有关红黑树。</p>
+<h2 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h2><p>从这个名字，可以简单理解一下，他是为了解决什么被发明出来的。当然是查找了。因为名字自带查找。哈哈 开个玩笑。其实就是为了方便查找</p>
+<p><em>特征：<strong>左边</strong>子元素的值一定 &lt;= 根节点*<br>*特征：**右边**子元素的值一定 &gt;= 根节点</em></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583651636369.png_imagess" alt="image.png"></p>
+<p>这就是一个典型的二叉查找树，比如我们查找一个<code>2</code>的元素位置</p>
+<ul>
+<li>从根节点出发。5比2大，向着左节点4</li>
+<li>4比2大，向着左节点</li>
+<li>到达2的位置。</li>
+</ul>
+<p>二叉查找树使用二分法的思想，将元素的位置唯一指定出来。查找最大次数=二叉树高度。</p>
+<h3 id="二叉查找树缺陷"><a href="#二叉查找树缺陷" class="headerlink" title="二叉查找树缺陷"></a>二叉查找树缺陷</h3><p>这么nice的二分法查找树，也不是没有缺陷的，世界上没有任何一个完美的东西。<br>所以，它的缺陷就是：如果我们的元素全部都是小于根节点的，那就变成这样的一个东西了。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583652958927.png_imagess" alt="image.png"></p>
+<p>这样，若是查找一个关于<code>7</code> 的元素，那么直接乱套了。直接和线性的数组就没有区别了。还是需要一个个遍历。</p>
+<p>为了解决这种缺陷，下面这个东西出现了！</p>
+<h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><p>红黑树，是一种自我平衡的二叉查找树，说白了就是比二叉查找树更加Plus<br>HashMap 再JDK 8当中。若链表长度超过8，则转换为红黑树。这也是一种特别好用的数据结构。所以说。<code>很重要</code></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li>节点要么是红色/黑色（名字中自带的属性）</li>
+<li>根节点是黑色的。</li>
+<li>叶子节点是<code>黑色的空节点</code></li>
+<li>每个红色节点下面都有两个黑色节点</li>
+<li>从任意节点到每个叶子节点路径都都包含相同数目的黑色节点</li>
+</ol>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583656260763.png_imagess" alt="image.png"></p>
+<h3 id="插入一个新值"><a href="#插入一个新值" class="headerlink" title="插入一个新值"></a>插入一个新值</h3><p>在插入一个新值的时候，可能会使红黑树违反上面的5条规则，这个时候需要进行变色和旋转，我们逐一来讲解。</p>
+<p>假设向当前红黑树插入一个 <code>21</code> 节点。<br><img src="https://file.chaobei.xyz/blogs/image_1583658658952.png_imagess" alt="image.png"></p>
+<p>21比22小，所以只能放到22左边的位置。这里问题也就来了：</p>
+<ul>
+<li>为啥这个节点必须是<code>红色</code>的 而不能是黑色？</li>
+</ul>
+<blockquote>
+<p>叶子节点必须是黑色空节点，所以，红色节点下必须有两个黑色节点，所以该节点必须是红色。</p>
+</blockquote>
+<p>当然，又往上面看的话，你就会发现：22 是红色节点，红色节点必须包含两个黑色节点？ 这又冲突了。怎么办？</p>
+<h2 id="节点的变色"><a href="#节点的变色" class="headerlink" title="节点的变色"></a>节点的变色</h2><p><img src="https://file.chaobei.xyz/blogs/image_1583659274361.png_imagess" alt="image.png"></p>
+<p>这里尝试将22 节点变为黑色。这样的话，下面的规则满足了。但是从17号元素出发。到叶子节点。左边的线路有三个黑色节点，左边只有两个。</p>
+<blockquote>
+<p>从任意节点到每个叶子节点路径都都包含相同数目的黑色节点</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583659436330.png_imagess" alt="image.png"></p>
+<p>为了规则的完整性，继续变色。将25号元素变成红色</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583659767951.png_imagess" alt="image.png"></p>
+<p>这时候还没有结束，因为</p>
+<blockquote>
+<p>每个红色节点下面都有两个黑色节点</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583659866651.png_imagess" alt="image.png"></p>
+<p>这样才算完全符合规则规范。</p>
+<h2 id="节点的旋转方法"><a href="#节点的旋转方法" class="headerlink" title="节点的旋转方法"></a>节点的旋转方法</h2><h3 id="左旋转"><a href="#左旋转" class="headerlink" title="左旋转"></a>左旋转</h3><p>这里理解起来会很吃力。我先画个图。来理解这里面涉及到的内容。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583820986086.png_imagess" alt="image.png"></p>
+<ol>
+<li>父节点被自己的右边孩子取代。</li>
+<li>而原来的父节点则需要成为被取代位置的左节点。</li>
+</ol>
+<p><strong>最简单的方式是将子节点的左节点断开，挂到父节点上，翻转一下位置即可。</strong></p>
+<ol>
+<li><p>断开子节点的左边节点。<br><img src="https://file.chaobei.xyz/blogs/image_1583821421883.png_imagess" alt="image.png"></p>
+</li>
+<li><p>将断开的这个节点挂到父节点上。<br><img src="https://file.chaobei.xyz/blogs/image_1583821491394.png_imagess" alt="image.png"></p>
+</li>
+<li><p>旋转位置<br><img src="https://file.chaobei.xyz/blogs/image_1583821620129.png_imagess" alt="image.png"></p>
+</li>
+</ol>
+<p>很好理解吧！</p>
+<h3 id="右旋转-顺时针旋转"><a href="#右旋转-顺时针旋转" class="headerlink" title="右旋转 顺时针旋转"></a>右旋转 顺时针旋转</h3><p><img src="https://file.chaobei.xyz/blogs/image_1583821866474.png_imagess" alt="image.png"></p>
+<ol>
+<li><p>断开子节点的右孩子。<br><img src="https://file.chaobei.xyz/blogs/image_1583821937966.png_imagess" alt="image.png"></p>
+</li>
+<li><p>挂到父节点上<br><img src="https://file.chaobei.xyz/blogs/image_1583821998733.png_imagess" alt="image.png"></p>
+</li>
+<li><p>旋转位置。<br><img src="https://file.chaobei.xyz/blogs/image_1583822067164.png_imagess" alt="image.png"></p>
+</li>
+</ol>
+<p><strong>往那边旋转，就断开自己的那边的孩子，然后挂到父级，将节点变换一下位置即可。</strong></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>其实红黑树的内容了解这么多就可以了。也没必要必须钻牛角尖。只需要懂得红黑树这种自平衡的主体思想即可。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jz1ajDUygZ7sXLQFHyfjWA" >https://mp.weixin.qq.com/s/jz1ajDUygZ7sXLQFHyfjWA<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：数据结构-3-二叉查找树-红黑树</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-21 14:51:52</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/21/数据结构-3-二叉查找树-红黑树/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-4-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-B%E6%A0%91/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-4-时间复杂度-B树</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-2-%E5%AD%97%E7%AC%A6%E4%B8%B2-%E6%95%B0%E7%BB%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%BB%A5%E5%8F%8A%E9%81%8D%E5%8E%86/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-2-字符串-数组-二叉树以及遍历</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">二叉查找树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91%E7%BC%BA%E9%99%B7"><span class="nav-number">1.1.</span> <span class="nav-text">二叉查找树缺陷</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">红黑树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E4%B8%80%E4%B8%AA%E6%96%B0%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">插入一个新值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E7%9A%84%E5%8F%98%E8%89%B2"><span class="nav-number">3.</span> <span class="nav-text">节点的变色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E7%9A%84%E6%97%8B%E8%BD%AC%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">节点的旋转方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A6%E6%97%8B%E8%BD%AC"><span class="nav-number">4.1.</span> <span class="nav-text">左旋转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%B3%E6%97%8B%E8%BD%AC-%E9%A1%BA%E6%97%B6%E9%92%88%E6%97%8B%E8%BD%AC"><span class="nav-number">4.2.</span> <span class="nav-text">右旋转 顺时针旋转</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

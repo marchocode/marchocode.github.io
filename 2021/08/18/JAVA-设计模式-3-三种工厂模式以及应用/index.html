@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            JAVA-设计模式-2-三种工厂模式以及应用 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">JAVA-设计模式-2-三种工厂模式以及应用</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-08-18 15:51:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82/">简单工厂</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95/">工厂方法</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82/">抽象工厂</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="三种工厂模式以及应用"><a href="#三种工厂模式以及应用" class="headerlink" title="三种工厂模式以及应用"></a>三种工厂模式以及应用</h2><p>三种工厂模式，都属于创建型类型，就是关心如果创建出对象，不过 <code>简单工厂模式</code> 是不包含在《23种G0F》里面的，不过还是通常用的，所以这里也介绍。</p>
+<h3 id="简单工厂"><a href="#简单工厂" class="headerlink" title="简单工厂"></a>简单工厂</h3><p>简单工厂提供一个全局访问的实体，通过这个实体的一个静态方法，完成对象的创建</p>
+<p><img src="https://file.chaobei.xyz/20210818095421.jpg_imagess" alt="简单工厂"></p>
+<p>通过一个接口<code>Shape(图形)</code>，限定这个类返回的类型，通常使用接口作为返回值，通过工厂内的逻辑，返回不同的对象<code>RoundShape(圆形)</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Shape <span class="title">create</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;triangle&quot;</span>.equals(name)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TriangleShape();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;round&quot;</span>.equals(name)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RoundShape();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 违反开闭原则</span></span><br><span class="line"><span class="comment">     else if (&quot;square&quot;.equals(name)) &#123;</span></span><br><span class="line"><span class="comment">        return new SquareShape();</span></span><br><span class="line"><span class="comment">     &#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;未找到指定类型&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如如上代码，全局提供一个 <code>静态</code> 访问点，在工厂内部完成逻辑的转换，对于外部而言，无需知道工厂内部的处理，只需要将需要的 <code>标志</code> 传递给工厂，让工厂 <code>生产</code> 对应的产品。</p>
+<hr>
+<p>但是这样有一个问题：</p>
+<p>如果后面又多了一个对象需要生产，比如一开始 <code>Shape(图形)</code> 工厂只生产有关于<code>正方形、圆形</code> 等产品，但是现在又多了一个需求，需要多生产一种类型 <code>SquareShape</code> 这样，我们原有的代码就在未修改的情况下，完成这一逻辑，所以就得修改代码，这就违反了 <code>开闭原则</code></p>
+<h4 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h4><blockquote>
+<p>开闭原则(Open-Closed Principle, OCP)：一个软件实体应当对扩展开放，对修改关闭。即软件实体应尽量在不修改原有代码的情况下进行扩展。</p>
+</blockquote>
+<p>说人话就是：可以通过增加实体的方式完成新逻辑的实现，但是不能修改原有代码。</p>
+<p>这里我们原有的代码违反 <code>开闭原则</code> 就是因为增加一种新的逻辑的时候，需要修改工厂内部的代码，需要多加一个 <code>if</code> 的判断逻辑。</p>
+<h4 id="符合原则修改"><a href="#符合原则修改" class="headerlink" title="符合原则修改"></a>符合原则修改</h4><p>如果每次增加一个新的类型，我们不需要修改代码，可以通过 <code>JAVA 反射机制</code> 通过配置文件进行增加我们新的类型，然后代码就可以在不修改的情况下，完成我们新逻辑的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Shape <span class="title">create</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        String className = XmlUtils.getShapeClass(name);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == className) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;未找到指定的配置&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class classes = Class.forName(className);</span><br><span class="line">            <span class="keyword">return</span> (Shape) classes.newInstance();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们需要配置一个<code>.XML</code> 文件的配置解析类，来解析我们对应的逻辑，返回 <code>class path</code> 通过类名的方式，获取 <code>Class</code> 对象，调用<code>newInstance()</code> 获取一个实例，和调用 <code>new</code> 关键字完成空构造器实例化是一样的。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">shape-item</span> <span class="attr">name</span>=<span class="string">&quot;triangle&quot;</span>&gt;</span>xyz.chaobei.impl.TriangleShape<span class="tag">&lt;/<span class="name">shape-item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">shape-item</span> <span class="attr">name</span>=<span class="string">&quot;round&quot;</span>&gt;</span>xyz.chaobei.impl.RoundShape<span class="tag">&lt;/<span class="name">shape-item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">shape-item</span> <span class="attr">name</span>=<span class="string">&quot;square&quot;</span>&gt;</span>xyz.chaobei.impl.SquareShape<span class="tag">&lt;/<span class="name">shape-item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="不足点"><a href="#不足点" class="headerlink" title="不足点"></a>不足点</h4><p>但是这样的工厂也是有 <code>局限性</code> 的。比如要在创建指定的 <code>Shape</code> 之前，如果需要创建另外其他 <code>对象</code> 作为铺垫，那么，就满足不了我们的要求了。</p>
+<p>你可能会写出这样的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Shape <span class="title">create</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;triangle&quot;</span>.equals(name)) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;创建一些其他对象....&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TriangleShape();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;round&quot;</span>.equals(name)) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;创建一些其他对象....&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RoundShape();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;未找到指定类型&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><blockquote>
+<p>业务需求：现需要将系统的日志打印到 <code>文件</code> 或者 <code>数据库</code> 中，并且可以通过配置文件快速的切换。</p>
+</blockquote>
+<p>当然，如果简单工厂已经无法满足我们的要求了，因为在创建这个 <code>Logger</code> 对象的时候，可能需要事先创建好文件，或者连接数据库等操作，涉及需要初始化的操作和对象可能会有点多，当然，如果全部写在<code>简单工厂</code> 里面的话，这个类就会显得很臃肿了。</p>
+<p>不利于后期维护。</p>
+<h4 id="对比简单工厂"><a href="#对比简单工厂" class="headerlink" title="对比简单工厂"></a>对比简单工厂</h4><ul>
+<li>可以将创建对象的细节包含到工厂中</li>
+<li>工厂创建产品前后可以完成一些对象的初始化等。</li>
+</ul>
+<p>工厂方法就是解决如上难题的，把创建对象的逻辑 <code>封装</code> 到对应的方法里面</p>
+<p><img src="https://file.chaobei.xyz/20210818105606.png_imagess" alt="image-20210818105605921"></p>
+<p>抽象工厂 <code>LoggerFactory</code> 定义了子类所必须实现的方法，返回具体的产品类<code>Logger</code>，并且提供一个访问点，直接访问产品对应的方法 <code>writeLog()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeLog</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Logger logger = createLogger();</span><br><span class="line">        logger.writeLog();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Logger <span class="title">createLogger</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体的子工厂 <code>FileLoggerFactory</code> 则是创建对应产品 <code>FileLogger</code> 的具体逻辑所在，一个工厂创建一个具体的对象，可能在这之前还会有一些其他的初始化操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileLoggerFactory</span> <span class="keyword">extends</span> <span class="title">LoggerFactory</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Logger <span class="title">createLogger</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;FileLoggerFactory-创建文件&quot;</span>);</span><br><span class="line">        Logger logger = <span class="keyword">new</span> FileLogger();</span><br><span class="line">        System.out.println(<span class="string">&quot;FileLoggerFactory-做一些其他工作&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>产品的接口<code>Logger</code> 则是定义了当前产品的一些方法。</p>
+<p>总体来说对应的<code>产品Logger</code>和<code>工厂AbstractFactory</code> 是一一对应的，对比于简单工厂，就算创建当前对象的过程更加复杂，都能包含到对应的工厂内部。对外，则有更好的封装性。</p>
+<p>同样的，我们提供 <code>xml配置文件</code> 反射实例化的方式，让其满足开闭原则。</p>
+<p>如果后面业务增加，只需要增加一个<code>对应实例工厂</code> 以及一个<code>新的产品</code> 即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">log-factory</span>&gt;</span>xyz.chaobei.impl.FileLoggerFactory<span class="tag">&lt;/<span class="name">log-factory</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="不足点-1"><a href="#不足点-1" class="headerlink" title="不足点"></a>不足点</h4><p>但是工厂方法也有不足的地方，就是如果一旦业务对象过多，就会造成大量的 <code>工厂类</code> 和 <code>产品类</code></p>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>抽象工厂则更好的满足 <code>大量工厂类</code> 导致系统臃肿的问题。如果说 <code>工厂方法</code> 的一个类负责一个 <code>产品</code> 对象的创建，则 <code>抽象工厂</code> 的一个类则能创建多个 <code>产品</code> 完成一系列（产品簇）产品的创建。</p>
+<blockquote>
+<p>业务需求：当前系统的按钮、窗口、以及输入框需要自定义颜色配置。可以通过配置文件快速完成切换。</p>
+</blockquote>
+<h4 id="产品簇"><a href="#产品簇" class="headerlink" title="产品簇"></a>产品簇</h4><p>一个产品簇可以包含多个子产品，类似于数据轴上的按钮、窗口、输入框组成一个产品簇。</p>
+<p><img src="https://file.chaobei.xyz/20210818160201.png_imagess" alt="image-20210818160201312"></p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>所以，<code>抽象工厂</code> 把一个 <code>产品簇</code> 定义到一个工厂内 <code>统一生产</code> 解决了需要定义很多类的问题。</p>
+<p><img src="https://file.chaobei.xyz/20210818163322.png_imagess" alt="image-20210818163322784"></p>
+<h4 id="对比工厂方法"><a href="#对比工厂方法" class="headerlink" title="对比工厂方法"></a>对比工厂方法</h4><p>假如使用 <code>工厂方法</code> 实现这个逻辑，则需要 <code>3个接口</code>、<code>6个接口实现类</code>，<code>1个抽象定义的工厂</code>，<code>6个对应产品的工厂</code>。</p>
+<p>好家伙，这个类的数量有点多的离谱。。。</p>
+<ul>
+<li>实际的工厂类可以创建一个 <code>产品簇</code> 包含多个产品</li>
+<li>减少工厂类数量</li>
+</ul>
+<h4 id="不足点-2"><a href="#不足点-2" class="headerlink" title="不足点"></a>不足点</h4><p>如果当前产品簇需要额外加一个产品，那所有的工厂都需要重写这个定义的方法，需要修改系统现存的所有类，特别繁琐。</p>
+<h3 id="优缺点对比"><a href="#优缺点对比" class="headerlink" title="优缺点对比"></a>优缺点对比</h3><table>
+<thead>
+<tr>
+<th align="left">工厂名称</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">简单工厂</td>
+<td>能够配合反射满足 <code>开闭原则</code>，生产无参构造器简单对象</td>
+<td>不能调用其他构造器，并且在实例化对象前后不能做任何事情</td>
+<td>简单为数不多的对象实例化。</td>
+</tr>
+<tr>
+<td align="left">工厂方法</td>
+<td>将产品的创造逻辑放到对应的工厂内部，有较好的封装性，可以在工厂内部做一些初始化操作。</td>
+<td>随着系统产品的增多，会产生大量的 <code>工厂类</code></td>
+<td>产品类型不多，且需要实例化前后完成一些业务的场景。</td>
+</tr>
+<tr>
+<td align="left">抽象工厂</td>
+<td>减少产品工厂类，一个具体工厂可以创建一个产品簇，包含多个产品</td>
+<td>产品簇的产品数量一定，不可后期增加</td>
+<td>产品簇产品数量一定的场景</td>
+</tr>
+</tbody></table>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>工厂模式，按需选择，合适才是硬道理。</p>
+<h4 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h4><p><a class="link"   target="_blank" rel="noopener" href="https://gitee.com/mrc1999/23GOF" >https://gitee.com/mrc1999/23GOF<i class="fas fa-external-link-alt"></i></a></p>
+<h4 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a>参考内容</h4><p><a class="link"   target="_blank" rel="noopener" href="https://gof.quanke.name/" >https://gof.quanke.name/<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="欢迎关注"><a href="#欢迎关注" class="headerlink" title="欢迎关注"></a>欢迎关注</h3><p><img src="https://file.chaobei.xyz/blogs/banner_1591192617234.jpg" alt="欢迎关注微信公众号"></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：JAVA-设计模式-2-三种工厂模式以及应用</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-08-18 15:51:32</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/08/18/JAVA-设计模式-3-三种工厂模式以及应用/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/26/JAVA-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-4-%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JAVA-设计模式-4-建造者模式</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E4%BB%A5%E5%8F%8A%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">三种工厂模式以及应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82"><span class="nav-number">1.1.</span> <span class="nav-text">简单工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-number">1.1.1.</span> <span class="nav-text">开闭原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%A6%E5%90%88%E5%8E%9F%E5%88%99%E4%BF%AE%E6%94%B9"><span class="nav-number">1.1.2.</span> <span class="nav-text">符合原则修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E8%B6%B3%E7%82%B9"><span class="nav-number">1.1.3.</span> <span class="nav-text">不足点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">工厂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82"><span class="nav-number">1.2.1.</span> <span class="nav-text">对比简单工厂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E8%B6%B3%E7%82%B9-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">不足点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="nav-number">1.3.</span> <span class="nav-text">抽象工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A7%E5%93%81%E7%B0%87"><span class="nav-number">1.3.1.</span> <span class="nav-text">产品簇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.3.</span> <span class="nav-text">对比工厂方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E8%B6%B3%E7%82%B9-2"><span class="nav-number">1.3.4.</span> <span class="nav-text">不足点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9%E5%AF%B9%E6%AF%94"><span class="nav-number">1.4.</span> <span class="nav-text">优缺点对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.5.1.</span> <span class="nav-text">代码示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%86%85%E5%AE%B9"><span class="nav-number">1.5.2.</span> <span class="nav-text">参考内容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A2%E8%BF%8E%E5%85%B3%E6%B3%A8"><span class="nav-number">1.6.</span> <span class="nav-text">欢迎关注</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

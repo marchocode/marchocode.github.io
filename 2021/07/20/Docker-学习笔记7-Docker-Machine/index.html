@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            Docker-学习笔记7-Docker-Machine |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Docker-学习笔记7-Docker-Machine</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-20 17:17:23
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Docker学习笔记</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Docker-Machine/">Docker Machine</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.6k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>12 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="在阿里云实例化ECS-以及本地Windows-实例化虚拟机实战"><a href="#在阿里云实例化ECS-以及本地Windows-实例化虚拟机实战" class="headerlink" title="在阿里云实例化ECS 以及本地Windows 实例化虚拟机实战"></a>在阿里云实例化ECS 以及本地Windows 实例化虚拟机实战</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>通过以上6小节的学习，已经可以使用DOCKER 熟练的部署应用程序了。大家都可以发现使用 DOCKER 带来的方便之处，因为现在的话，只是在一台服务器上部署，这样部署，我们只需要一条命令，需要的NGINX MYSQL 等服务全部启动，而不是按照传统部署方式：</p>
+<ul>
+<li>安装JDK 配置环境变量</li>
+<li>安装MYSQL 启动服务</li>
+<li>安装NGINX 配置文件</li>
+<li>启动调试 。。。。</li>
+</ul>
+<p>要是还有一台机器需要部署呢？你是不是也得按照这个顺序再来一遍，这也太麻烦了。</p>
+<p>本节要学习的内容是DOCKER 三剑客第二 <code>Docker Machine</code></p>
+<h2 id="Docker-Machine"><a href="#Docker-Machine" class="headerlink" title="Docker Machine"></a>Docker Machine</h2><p>Docker Machine 是一个工具，可以让您在虚拟主机上安装 Docker Engine，并使用 Docker-Machine 命令管理主机。 你可以使用 Machine 在你本地的 Mac 或 Windows 机顶盒上，在你的公司网络上，在你的数据中心上，或者在像 Azure，AWS，DigitalOcean 这样的云提供商上创建 Docker 主机。</p>
+<p>Docker Machine 使您能够在各种版本的 Linux 上提供多个远程 Docker 主机。</p>
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><p>我们都使用过虚拟机 VM VirtualBOX 当然，我们在使用VM 的时候，就是在本机上建立了许多个虚拟机，可以运行好几个Centos,使用VM 来管理这些虚拟机的开机/关机/重启 等操作。<br><img src="https://file.chaobei.xyz/blogs/image_1581388958837.png_imagess" alt="image.png"></p>
+<p>所以，现在的 Machine 就充当了这个虚拟机管理的身份。可以用它来创建多个虚拟主机，并安装 Docker Engine</p>
+<p>我们可以使用这个 Machine 来管理这些虚拟机上面的 Docker Engine.</p>
+<h2 id="Docker-Engine-与-Docker-Machine-区别"><a href="#Docker-Engine-与-Docker-Machine-区别" class="headerlink" title="Docker Engine 与 Docker Machine 区别"></a>Docker Engine 与 Docker Machine 区别</h2><h3 id="Docker-Engine"><a href="#Docker-Engine" class="headerlink" title="Docker Engine"></a>Docker Engine</h3><p>通常，我们说 Docker 的时候指的是 Docker Engine</p>
+<p>如下面这张图一样，Docker Engine 是运行在 Linux 上的应用</p>
+<ul>
+<li>包含服务守护进程 daemon server</li>
+<li>与守护进程交互的 RestAPI</li>
+<li>我们平时输入 <code>docker run</code>的命令行 CLI</li>
+</ul>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581389599014.png_imagess" alt="image.png"></p>
+<h3 id="Docker-Machine-1"><a href="#Docker-Machine-1" class="headerlink" title="Docker Machine"></a>Docker Machine</h3><p>Docker Machine 是一个用于配置和管理 Dockerized 主机(上面有 Docker Engine 的主机)的工具。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581389813069.png_imagess" alt="image.png"></p>
+<h2 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h2><h2 id="Linux-版本"><a href="#Linux-版本" class="headerlink" title="Linux 版本"></a>Linux 版本</h2><h3 id="首先安装Docker-Engine"><a href="#首先安装Docker-Engine" class="headerlink" title="首先安装Docker Engine"></a>首先安装Docker Engine</h3><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/ChromeT/p/12272326.html" >https://www.cnblogs.com/ChromeT/p/12272326.html<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 从github 拉取最新版本 （下载特慢，推荐迅雷复制下载地址后，上传服务器）</span></span><br><span class="line">curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` &gt; /usr/<span class="built_in">local</span>/bin/docker-machine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 迅雷下载地址 （Linux/X86_64）搞清楚自己的服务器架构</span></span><br><span class="line">https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-Linux-x86_64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 赋予读取权限</span></span><br><span class="line">chmod +x /usr/<span class="built_in">local</span>/bin/docker-machine</span><br><span class="line"></span><br><span class="line"><span class="comment">## 检查安装信息</span></span><br><span class="line">docker-machine version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Docker-Machine-创建虚拟主机"><a href="#使用Docker-Machine-创建虚拟主机" class="headerlink" title="使用Docker Machine 创建虚拟主机"></a>使用Docker Machine 创建虚拟主机</h3><p><code>docker-machine create --driver xxx name</code> 创建虚拟主机</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine create --driver virtualbox default</span></span><br><span class="line">Running pre-create checks...</span><br><span class="line">Error with pre-create check: <span class="string">&quot;VBoxManage not found. Make sure VirtualBox is installed and VBoxManage is in the path&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>注意！！！！</strong></p>
+<blockquote>
+<p>因为现在我用的服务器是阿里云ECS 共享型，所以这已经是一个虚拟机，VM是不支持虚拟机嵌套虚拟机的。所以，直接到后面看，通过配置阿里云驱动后使用docker-machine 创建和购买实例。</p>
+</blockquote>
+<p><strong>安装VM 也无济于事！！！！</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine create --driver virtualbox default</span></span><br><span class="line">Running pre-create checks...</span><br><span class="line">Error with pre-create check: <span class="string">&quot;This computer doesn&#x27;t have VT-X/AMD-v enabled. Enabling it in the BIOS is mandatory&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-aliyun-驱动"><a href="#使用-aliyun-驱动" class="headerlink" title="使用 aliyun 驱动"></a>使用 aliyun 驱动</h3><p>通过配置aliyun 的驱动，可以方便的创建阿里云实例，而不是创建虚拟机，其实要是在阿里云服务器创建虚拟机也不现实，毕竟内存就那么大，而且，还没有对应的IP分配给虚拟机。</p>
+<blockquote>
+<p>GITHUB <a class="link"   target="_blank" rel="noopener" href="https://github.com/AliyunContainerService/docker-machine-driver-aliyunecs" >https://github.com/AliyunContainerService/docker-machine-driver-aliyunecs<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 下载驱动</span></span><br><span class="line">curl -O https://docker-machine-aliyunecs-drivers.oss-cn-beijing.aliyuncs.com/docker-machine-driver-aliyunecs_linux-amd64.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment">## 解压</span></span><br><span class="line">tar -zxvf docker-machine-driver-aliyunecs_linux-amd64.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment">## 复制到可执行目录下</span></span><br><span class="line">cp bin/docker-machine-driver-aliyunecs.linux-amd64 /usr/<span class="built_in">local</span>/bin/docker-machine-driver-aliyunecs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 打开环境变量文件</span><br><span class="line"></span><br><span class="line">vi ~/.bashrc</span><br><span class="line"></span><br><span class="line">## 加入以下内容（需要改变的地方我会说）</span><br><span class="line"></span><br><span class="line">export ECS_ACCESS_KEY_ID=&#x27;填你自己key id&#x27;</span><br><span class="line">export ECS_ACCESS_KEY_SECRET=&#x27;填你自己的key secret&#x27;</span><br><span class="line"># 购买的镜像是1核0.5G内存的最小型实例</span><br><span class="line">export ECS_INSTANCE_TYPE=&#x27;ecs.t5-lc2m1.nano&#x27;</span><br><span class="line"># 来个50M宽带</span><br><span class="line">export ECS_INTERNET_MAX_BANDWIDTH=&#x27;50&#x27;</span><br><span class="line"># 购买的区域是石家庄</span><br><span class="line">export ECS_REGION=&#x27;cn-zhangjiakou&#x27;</span><br><span class="line"># 设置的密码,一定要8~30位，有大小写字母，数字和乱七八糟的标点，不然会自动创建失败</span><br><span class="line">export ECS_SSH_PASSWORD=&#x27;7b6424B61c6C21~0%39F1C56&#x27;</span><br><span class="line"># 磁盘只要20G</span><br><span class="line">export ECS_SYSTEM_DISK_SIZE=&#x27;20&#x27;</span><br><span class="line"># 磁盘用便宜的高效云盘吧，任性选SSD也行</span><br><span class="line">export ECS_SYSTEM_DISK_CATEGORY=&#x27;cloud_efficiency&#x27;</span><br><span class="line"># 选择的镜像是Ubuntu16.04</span><br><span class="line">export ECS_IMAGE_ID=&#x27;ubuntu_16_0402_64_20G_alibase_20180409.vhd&#x27;</span><br><span class="line"># 专用网络的节点</span><br><span class="line">export ECS_VPC_ID=&#x27;vpc-8vbhii32tpugfcqbryqcn&#x27;</span><br><span class="line"># 虚拟交换机的节点</span><br><span class="line">export ECS_VSWITCH_ID=&#x27;vsw-8vbweep4xrtamazp50775&#x27;</span><br><span class="line"># ECS的标签</span><br><span class="line">export ECS_TAGS=&#x27;chen_docker&#x27;</span><br><span class="line"># 安全组</span><br><span class="line">export ECS_SECURITY_GROUP=&#x27;sg-8vb5wwel08nyrih2lmtb&#x27;</span><br><span class="line"># 石家庄a区</span><br><span class="line">export ECS_ZONE=&#x27;cn-zhangjiakou-a&#x27;</span><br><span class="line"># 一定要是true</span><br><span class="line">export ECS_IO_OPTIMIZED=&#x27;true&#x27;</span><br><span class="line"></span><br><span class="line"># Using mirrors from Aliyun</span><br><span class="line">export MACHINE_DOCKER_INSTALL_URL=http://kubernetes.oss-cn-hangzhou.aliyuncs.com/docker_install.sh</span><br><span class="line">export ENGINE_REGISTRY_MIRROR=https://registry.docker-cn.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>参考：</strong> <a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/diyiday/article/details/93899190" >https://blog.csdn.net/diyiday/article/details/93899190<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h3><ul>
+<li><p>ECS_IMAGE_ID 镜像ID怎么选？<br><img src="https://file.chaobei.xyz/blogs/image_1581414324499.png_imagess" alt="image.png"><br>找到控制台，镜像列表，复制你想要的镜像即可。</p>
+</li>
+<li><p>ECS_REGION 购买区域 ？<br><img src="https://file.chaobei.xyz/blogs/image_1581414453684.png_imagess" alt="image.png"><br>这个若没有要求则就不需要配置，若已经有服务器在指定的区域，那就配置，比如杭州就是<code>cn-hangzhou</code> 这个时候注意观察地址栏的编号：<code>https://ecs-buy.aliyun.com/wizard?/postpay/cn-hangzhou</code></p>
+</li>
+<li><p>ECS_VPC_ID 专用网络节点 ？<br><img src="https://file.chaobei.xyz/blogs/image_1581414739023.png_imagess" alt="image.png"><br>要是已经有你已经买了服务器，就可以看到这些信息，就复制填写一样的，没有则不用配置这一个</p>
+</li>
+</ul>
+<h3 id="创建一个实例"><a href="#创建一个实例" class="headerlink" title="创建一个实例"></a>创建一个实例</h3><p><strong>注意：需要账户余额大于100 不然创建不成功！！！！</strong></p>
+<p><code>docker-machine create -d aliyunecs &lt;name&gt;</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine create -d aliyunecs mrctest</span></span><br><span class="line">Running pre-create checks...</span><br><span class="line">Creating machine...</span><br><span class="line">(mrctest) mrctest | Creating key pair <span class="keyword">for</span> instance ...</span><br><span class="line">(mrctest) mrctest | Configuring security groups instance ...</span><br><span class="line">(mrctest) mrctest | Creating instance with image centos_7_06_64_20G_alibase_20190711.vhd ...</span><br><span class="line">(mrctest) mrctest | Create instance i-xxxxxxxx successfully</span><br><span class="line">(mrctest) mrctest | Allocating Eip address <span class="keyword">for</span> instance i-xxxxxxxx ...</span><br><span class="line">(mrctest) mrctest | Associating Eip address eip-bp1hc5mty4iz4dnlb3o9b <span class="keyword">for</span> instance i-xxxxxxxx  ...</span><br><span class="line">(mrctest) mrctest | Starting instance i-xxxxxxxx ...</span><br><span class="line">(mrctest) mrctest | Start instance i-xxxxxxxx successfully</span><br><span class="line">(mrctest) mrctest | Waiting SSH service xxxxxxxx  is ready to connect ...</span><br><span class="line">(mrctest) mrctest | Uploading SSH keypair to xxxxxxxx  ...</span><br><span class="line">(mrctest) mrctest | Created instance i-xxxxxxxx successfully with public IP address xxxxxxxx  and private IP address xxxxxxxx </span><br><span class="line">Waiting <span class="keyword">for</span> machine to be running, this may take a few minutes...</span><br><span class="line">Detecting operating system of created instance...</span><br><span class="line">Waiting <span class="keyword">for</span> SSH to be available...</span><br><span class="line">Detecting the provisioner...</span><br><span class="line">Provisioning with centos...</span><br><span class="line">Copying certs to the <span class="built_in">local</span> machine directory...</span><br><span class="line">Copying certs to the remote machine...</span><br><span class="line">Setting Docker configuration on the remote daemon...</span><br><span class="line">Checking connection to Docker...</span><br><span class="line">Docker is up and running!</span><br><span class="line">To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env mrctest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看实例列表"><a href="#查看实例列表" class="headerlink" title="查看实例列表"></a>查看实例列表</h3><p><code>docker-machine ls</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine ls</span></span><br><span class="line">NAME                ACTIVE   DRIVER      STATE     URL                        SWARM   DOCKER     ERRORS</span><br><span class="line">mrctest             -        aliyunecs   Running   tcp://xxx.xxx.xxx.199:2376           v19.03.5   </span><br></pre></td></tr></table></figure>
+
+<h3 id="连接使用实例"><a href="#连接使用实例" class="headerlink" title="连接使用实例"></a>连接使用实例</h3><p><code>docker-machine ssh name</code><br>通过 SSH 连接后，这就和一个普通的主机没有什么区别了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine ssh mrctest</span></span><br><span class="line">Last login: Tue Feb 11 18:06:17 2020 from xxxxxxxx</span><br><span class="line"></span><br><span class="line">Welcome to Alibaba Cloud Elastic Compute Service !</span><br><span class="line"></span><br><span class="line">[root@mrctest ~]<span class="comment"># docker version</span></span><br><span class="line">Client: Docker Engine - Community</span><br><span class="line"> Version:           19.03.5</span><br><span class="line"> API version:       1.40</span><br><span class="line"> Go version:        go1.12.12</span><br><span class="line"> Git commit:        633a0ea</span><br><span class="line"> Built:             Wed Nov 13 07:25:41 2019</span><br><span class="line"> OS/Arch:           linux/amd64</span><br><span class="line"> Experimental:      <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">Server: Docker Engine - Community</span><br><span class="line"> Engine:</span><br><span class="line">  Version:          19.03.5</span><br><span class="line">  API version:      1.40 (minimum version 1.12)</span><br><span class="line">  Go version:       go1.12.12</span><br><span class="line">  Git commit:       633a0ea</span><br><span class="line">  Built:            Wed Nov 13 07:24:18 2019</span><br><span class="line">  OS/Arch:          linux/amd64</span><br><span class="line">  Experimental:     <span class="literal">false</span></span><br><span class="line"> containerd:</span><br><span class="line">  Version:          1.2.10</span><br><span class="line">  GitCommit:        b34a5c8af56e510852c35414db4c1f4fa6172339</span><br><span class="line"> runc:</span><br><span class="line">  Version:          1.0.0-rc8+dev</span><br><span class="line">  GitCommit:        3e425f80a8c931f88e6d94a8c831b9d5aa481657</span><br><span class="line"> docker-init:</span><br><span class="line">  Version:          0.18.0</span><br><span class="line">  GitCommit:        fec3683</span><br><span class="line">[root@mrctest ~]<span class="comment"># exit</span></span><br><span class="line"><span class="built_in">logout</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实例销毁"><a href="#实例销毁" class="headerlink" title="实例销毁"></a>实例销毁</h3><p><code>docker-machine rm &lt;name&gt;</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@mrclinux ~]<span class="comment"># docker-machine rm mrctest</span></span><br><span class="line">About to remove mrctest</span><br><span class="line">WARNING: This action will delete both <span class="built_in">local</span> reference and remote instance.</span><br><span class="line">Are you sure? (y/n): y</span><br><span class="line">(mrctest) mrctest | Remove instance i-bp15uqp37s1r2ei0f5z5 ...</span><br><span class="line">(mrctest) mrctest | Deleting instance: i-bp15uqp37s1r2ei0f5z5</span><br><span class="line">Successfully removed mrctest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="WINDOWS-10-版本"><a href="#WINDOWS-10-版本" class="headerlink" title="WINDOWS 10 版本"></a>WINDOWS 10 版本</h2><blockquote>
+<p>请参见：<a href="https://blogs.chaobei.xyz/archives/docker6">https://blogs.chaobei.xyz/archives/docker6</a></p>
+</blockquote>
+<p>安装了 docker-toolbox 后 默认带有 <code>docker-machine</code></p>
+<h2 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h2><p>这里遇到的问题是：部署虚拟主机我这台电脑已经启动了Hyper-V (之前安装的是docker for windows)而 virtualbox 与 Hyper-v是不能同时运行的，所以，这里有两个解决方法：</p>
+<ul>
+<li>禁用掉 hyperv 使用virtualbox</li>
+<li>直接使用 hyperv</li>
+</ul>
+<h3 id="使用-virtualbox-（推荐）"><a href="#使用-virtualbox-（推荐）" class="headerlink" title="使用 virtualbox （推荐）"></a>使用 virtualbox （推荐）</h3><p>hyperv 会在创建虚拟机时候存在大量问题，不推荐使用。若遇到这个问题，请参考 <a href="https://blogs.chaobei.xyz/archives/docker6">https://blogs.chaobei.xyz/archives/docker6</a> 将docker for windows 换成 docker-toolbox</p>
+<blockquote>
+<p>以下是我的采坑尝试</p>
+</blockquote>
+<p>virtualbox 需要安装 Orcle VM Virtual BOX<br><img src="https://file.chaobei.xyz/blogs/image_1581484422564.png_imagess" alt="image.png"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">PS C:\Users\17639&gt; docker-machine create -d virtualbox  vm</span><br><span class="line">Running pre-create checks...</span><br><span class="line">Error with pre-create check: <span class="string">&quot;This computer is running Hyper-V. VirtualBox won&#x27;t boot a 64bits VM when Hyper-V is activated. Either use Hyper-V as a driver, or disable the Hyper-V hypervisor. (To skip this check, use --virtualbox-no-vtx-check)&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="下载boot2docker-镜像"><a href="#下载boot2docker-镜像" class="headerlink" title="下载boot2docker 镜像"></a>下载boot2docker 镜像</h3><blockquote>
+<p>github <a class="link"   target="_blank" rel="noopener" href="https://github.com/boot2docker/boot2docker" >https://github.com/boot2docker/boot2docker<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<p>下载这个镜像的目的是：提高首次构建的速度。下载后移动到此位置。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1581587450574.png_imagess" alt="image.png"></p>
+<h3 id="使用-hyperv-（不推荐）"><a href="#使用-hyperv-（不推荐）" class="headerlink" title="使用 hyperv （不推荐）"></a>使用 hyperv （不推荐）</h3><p>这儿坑太多了。</p>
+<h2 id="错误总结"><a href="#错误总结" class="headerlink" title="错误总结"></a>错误总结</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\17639&gt; docker-machine create -d virtualbox  --virtualbox-no-vtx-check  vm</span><br><span class="line">Running pre-create checks...</span><br><span class="line">Creating machine...</span><br><span class="line">(vm) Copying C:\Users\17639\.docker\machine\cache\boot2docker.iso to C:\Users\17639\.docker\machine\machines\vm\boot2docker.iso...</span><br><span class="line">(vm) Creating VirtualBox VM...</span><br><span class="line">(vm) Creating SSH key...</span><br><span class="line">(vm) Starting the VM...</span><br><span class="line">(vm) Check network to re-create <span class="keyword">if</span> needed...</span><br><span class="line">(vm) Windows might ask <span class="keyword">for</span> the permission to create a network adapter. Sometimes, such confirmation window is minimized <span class="keyword">in</span> the taskbar.</span><br><span class="line">(vm) Found a new host-only adapter: <span class="string">&quot;VirtualBox Host-Only Ethernet Adapter #2&quot;</span></span><br><span class="line">(vm) Windows might ask <span class="keyword">for</span> the permission to configure a network adapter. Sometimes, such confirmation window is minimized <span class="keyword">in</span> the taskbar.</span><br><span class="line">(vm) Windows might ask <span class="keyword">for</span> the permission to configure a dhcp server. Sometimes, such confirmation window is minimized <span class="keyword">in</span> the taskbar.</span><br><span class="line">Error creating machine: Error <span class="keyword">in</span> driver during machine creation: Unable to start the VM: C:\Program Files\Oracle\VirtualBox\VBoxManage.exe startvm vm --<span class="built_in">type</span> headless failed:</span><br><span class="line">VBoxManage.exe: error: Call to WHvSetupPartition failed: ERROR_SUCCESS (Last=0xc000000d/87) (VERR_NEM_VM_CREATE_FAILED)</span><br><span class="line">VBoxManage.exe: error: Details: code E_FAIL (0x80004005), component ConsoleWrap, interface IConsole</span><br><span class="line"></span><br><span class="line">Details: 00:00:01.538449 Power up failed (vrc=VERR_NEM_VM_CREATE_FAILED, rc=E_FAIL (0X80004005))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个是因为我使用了virtualbox 而没有禁用掉hyperv 所导致的结果</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">PS C:\WINDOWS\system32&gt; docker-machine create --driver hyperv vm</span><br><span class="line">Running pre-create checks...</span><br><span class="line">Error with pre-create check: <span class="string">&quot;no External vswitch found. A valid vswitch must be available for this command to run. Check https://docs.docker.com/machine/drivers/hyper-v/&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里的意思是没有配置hyperv 虚拟网卡导致的！！！ 这儿存在太多问题，不建议使用hyperv 请使用 docker-toolbox</p>
+</blockquote>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过本次学习，可以学习到如何在阿里云通过 docker-machine 进行ECS的实例化以及部署DOCKER 过来使用，以及今后在本地进行DOCKER 的集群搭建的时候，要学会使用虚拟机，毕竟我们手头没有那么多主机嘛。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>官网： <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/machine/get-started/" >https://docs.docker.com/machine/get-started/<i class="fas fa-external-link-alt"></i></a></li>
+<li>驱动： <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/machine/drivers/hyper-v/" >https://docs.docker.com/machine/drivers/hyper-v/<i class="fas fa-external-link-alt"></i></a></li>
+<li>windows 10 开启hyper <a class="link"   target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v?redirectedfrom=MSDN" >https://docs.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v?redirectedfrom=MSDN<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Docker-学习笔记7-Docker-Machine</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-20 17:17:23</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/20/Docker-学习笔记7-Docker-Machine/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08-Docker-Swarm%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记8-Docker-Swarm集群搭建</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06-Windows%E7%89%88%E5%B0%9D%E9%B2%9C/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记6-Windows版尝鲜</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%AE%9E%E4%BE%8B%E5%8C%96ECS-%E4%BB%A5%E5%8F%8A%E6%9C%AC%E5%9C%B0Windows-%E5%AE%9E%E4%BE%8B%E5%8C%96%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%9E%E6%88%98"><span class="nav-number">1.</span> <span class="nav-text">在阿里云实例化ECS 以及本地Windows 实例化虚拟机实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Machine"><span class="nav-number">1.2.</span> <span class="nav-text">Docker Machine</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BE%E4%B8%AA%E6%A0%97%E5%AD%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">举个栗子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Engine-%E4%B8%8E-Docker-Machine-%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">Docker Engine 与 Docker Machine 区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Engine"><span class="nav-number">1.3.1.</span> <span class="nav-text">Docker Engine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Machine-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">Docker Machine</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.</span> <span class="nav-text">开始安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-%E7%89%88%E6%9C%AC"><span class="nav-number">1.5.</span> <span class="nav-text">Linux 版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E5%AE%89%E8%A3%85Docker-Engine"><span class="nav-number">1.5.1.</span> <span class="nav-text">首先安装Docker Engine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Docker-Machine-%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="nav-number">1.5.2.</span> <span class="nav-text">使用Docker Machine 创建虚拟主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-aliyun-%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.5.3.</span> <span class="nav-text">使用 aliyun 驱动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.5.4.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="nav-number">1.5.5.</span> <span class="nav-text">配置说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.5.6.</span> <span class="nav-text">创建一个实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%9E%E4%BE%8B%E5%88%97%E8%A1%A8"><span class="nav-number">1.5.7.</span> <span class="nav-text">查看实例列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.5.8.</span> <span class="nav-text">连接使用实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E9%94%80%E6%AF%81"><span class="nav-number">1.5.9.</span> <span class="nav-text">实例销毁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WINDOWS-10-%E7%89%88%E6%9C%AC"><span class="nav-number">1.6.</span> <span class="nav-text">WINDOWS 10 版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E9%83%A8%E7%BD%B2"><span class="nav-number">1.7.</span> <span class="nav-text">开始部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-virtualbox-%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">1.7.1.</span> <span class="nav-text">使用 virtualbox （推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDboot2docker-%E9%95%9C%E5%83%8F"><span class="nav-number">1.7.2.</span> <span class="nav-text">下载boot2docker 镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-hyperv-%EF%BC%88%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">1.7.3.</span> <span class="nav-text">使用 hyperv （不推荐）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">错误总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.9.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.10.</span> <span class="nav-text">参考</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

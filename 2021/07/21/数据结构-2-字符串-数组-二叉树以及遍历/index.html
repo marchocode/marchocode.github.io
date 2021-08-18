@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            数据结构-2-字符串-数组-二叉树以及遍历 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据结构-2-字符串-数组-二叉树以及遍历</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-21 14:49:35
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">字符串</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E6%95%B0%E7%BB%84/">数组</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.6k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>9 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>上一节的学习中，我们已经结合JAVA 本身，将线性表所包含的顺序表、链表、栈、队列等数据结构通通学习了一番，并且将这些数据结构的一些基本操作。比如</p>
+<ul>
+<li>add()</li>
+<li>remove()</li>
+<li>pop()</li>
+</ul>
+<p>等等方法都进行了列举，通过这些，我们将对线性表有了一个直接的认识。这节将学习有关字符串、广义表等内容。</p>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p>怎么理解字符串呢，想必大家都知道。我们在学习JAVA 8大基本类型的时候就有学习到字符串，但是JAVA 里面的字符串是一个<code>对象</code> 它是一个引用类型，并且初始化后，是一个<code>不可变对象</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="string">&quot;hello&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>很简单，我们通过一句代码，就可以将一个字符串常量化出来，为什么说常量化呢，这里我们没有采用new 的方式，所以这个变量其实是保存在了常量池里面。而不是堆里面。</p>
+<p>从严格意义来说，字符串其实也是符合 <code>线性结构</code> 的，因为我们都知道，字符串都是由基本类型的字符 <code>char</code> 连接起来组成的，他们存在<code>一对一</code>的关系。只不过这个线性表里面存的全部都是字符类型罢了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="string">&quot;&quot;</span>.value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过直接new 的方式，我们可以发现，构造函数里面其实是用一个字符数组来进行储存字符串的，我们这里的数组其实是一个静态数组，它不像List 一样，可以自由的变化长度，初始化了。它就确定死了，多长就多长。</p>
+<h3 id="字符串的储存方式"><a href="#字符串的储存方式" class="headerlink" title="字符串的储存方式"></a>字符串的储存方式</h3><ul>
+<li>普通数组定长储存（String）</li>
+<li>堆分配内存：动态数组储存（StringBuffer）</li>
+<li>链表储存</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StringBuffer</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(str.length() + <span class="number">16</span>);</span><br><span class="line">        append(str);</span><br><span class="line">    &#125;</span><br><span class="line">------------------</span><br><span class="line">    <span class="keyword">char</span>[] value;</span><br><span class="line"></span><br><span class="line">    AbstractStringBuilder(<span class="keyword">int</span> capacity) &#123;</span><br><span class="line">        value = <span class="keyword">new</span> <span class="keyword">char</span>[capacity];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AbstractStringBuilder <span class="title">append</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (str == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> appendNull();</span><br><span class="line">        <span class="keyword">int</span> len = str.length();</span><br><span class="line">        ensureCapacityInternal(count + len);</span><br><span class="line">        str.getChars(<span class="number">0</span>, len, value, count);</span><br><span class="line">        count += len;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>ensureCapacityInternal</code> 就是进行扩容的操作。这里的Stringbuffer 就是在堆上面进行的操作。可以像线性表一样。进行扩容操作。</p>
+<h3 id="BF-算法"><a href="#BF-算法" class="headerlink" title="BF 算法"></a>BF 算法</h3><p>BF算法是一种最普通的算法，在指定的字符串中匹配子串，匹配到则返回子串开始的下标。这个算法在String 当中最具有代表性的就是<code>indexOf(String str)</code> 这个方法了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(<span class="keyword">char</span>[] source, <span class="keyword">int</span> sourceOffset, <span class="keyword">int</span> sourceCount,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">char</span>[] target, <span class="keyword">int</span> targetOffset, <span class="keyword">int</span> targetCount,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">int</span> fromIndex)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (fromIndex &gt;= sourceCount) &#123;</span><br><span class="line">            <span class="keyword">return</span> (targetCount == <span class="number">0</span> ? sourceCount : -<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (fromIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            fromIndex = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (targetCount == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> fromIndex;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">char</span> first = target[targetOffset];</span><br><span class="line">        <span class="keyword">int</span> max = sourceOffset + (sourceCount - targetCount);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = sourceOffset + fromIndex; i &lt;= max; i++) &#123;</span><br><span class="line">            <span class="comment">/* Look for first character. */</span></span><br><span class="line">            <span class="keyword">if</span> (source[i] != first) &#123;</span><br><span class="line">                <span class="keyword">while</span> (++i &lt;= max &amp;&amp; source[i] != first);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* Found first character, now look at the rest of v2 */</span></span><br><span class="line">            <span class="keyword">if</span> (i &lt;= max) &#123;</span><br><span class="line">                <span class="keyword">int</span> j = i + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">int</span> end = j + targetCount - <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = targetOffset + <span class="number">1</span>; j &lt; end &amp;&amp; source[j]</span><br><span class="line">                        == target[k]; j++, k++);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (j == end) &#123;</span><br><span class="line">                    <span class="comment">/* Found whole string. */</span></span><br><span class="line">                    <span class="keyword">return</span> i - sourceOffset;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>IndexOf(str) 相比于BF(暴力)还是有很多优化的地方，比如首先会判断首字符是否相同，若首字符都不相同，那直接不用说了。跳过了一些重复的地方。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583549300896.png_imagess" alt="image.png"></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583549324305.png_imagess" alt="image.png"></p>
+<p>n 表示子串的长度 m表示源字符串的长度</p>
+<p>这个算法最优的时候，若直接在首位碰到，则时间复杂度 <code>O(n)</code></p>
+<p>最不幸的要是最后一位才可以碰到，则必须要循环 m*n 次 则时间复杂度 <code>O(M*N)</code></p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>数组我在之前就介绍过，一种最基本的存储结构。在线性表的几种分类中。顺序表底层就是使用数组来实现的。</p>
+<p>从本质上说，数组作为一种储存结构，而不是一种基本类型，可以理解为容纳基本类型的一个容器。</p>
+<p>常见的一维数组，其实是很简单的，<br><img src="https://file.chaobei.xyz/blogs/image_1583475589373.png_imagess" alt="image"></p>
+<p>指定一个一维数组，指定大小后，它的大小是不可再变的。并且数组元素的类型全部是统一的。</p>
+<h2 id="结构树"><a href="#结构树" class="headerlink" title="结构树"></a>结构树</h2><p>数据结构的树存储结构中。常用语存储<code>一对多</code>的数据，树结构当中，常用的还是二叉树、以及红黑树等，我这里一一介绍。</p>
+<h3 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h3><p>二叉树是结构树里面最有名也是使用最多的树结构数据结构，检查一个树是否满足二叉树，从两个方面下手</p>
+<ol>
+<li>每个节点下最多挂两个子节点 只能是0、1、2</li>
+<li>树的本身是有序或者无序</li>
+</ol>
+<p>如何来确定这个树是否是一个有序树还是无序树呢？</p>
+<ul>
+<li>按照一定的规则将节点左右分布，那就是有序树，反之则是无序树</li>
+</ul>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583569768788.png_imagess" alt="image"></p>
+<h3 id="二叉树规律"><a href="#二叉树规律" class="headerlink" title="二叉树规律"></a>二叉树规律</h3><p>按照前人的总结，我们可以得出以下结论。</p>
+<ul>
+<li>一个深度为K 的二叉树，最多包含节点数 <code>2的k次方-1</code></li>
+<li>二叉树指定n 层级所包含的节点数为 <code>2的n-1次方</code></li>
+</ul>
+<p>如果将二叉树在细分的话，又可以分为满二叉树与完全二叉树。</p>
+<h3 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h3><p>一听这个名字，就可以理解到。它是满（饱和）的，所以，来用画图表示一下<br><img src="https://file.chaobei.xyz/blogs/image_1583571530046.png_imagess" alt="image.png"></p>
+<p>如果二叉树除了叶子节点以外，所有的节点的度都是2（有两个子元素），那么它就是满二叉树</p>
+<h3 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h3><p>如果二叉树除去叶子节点是一个满二叉树，并且叶子节点从左向右依次排列。那么这就是一个完全二叉树。<br><img src="https://file.chaobei.xyz/blogs/image_1583571439323.png_imagess" alt="image.png"></p>
+<p>但是，这样排列的却不能成为是完全二叉树。<br><img src="https://file.chaobei.xyz/blogs/image_1583571749912.png_imagess" alt="image.png"></p>
+<h3 id="完全二叉树性质"><a href="#完全二叉树性质" class="headerlink" title="完全二叉树性质"></a>完全二叉树性质</h3><p>完全二叉树不但具有普通二叉树的性质，并且还有自己的一些独特性质。例如：</p>
+<ul>
+<li>具有n个节点的完全二叉树的深度是 <code>⌊log2n⌋+1。</code></li>
+</ul>
+<h2 id="二叉树的存储方式"><a href="#二叉树的存储方式" class="headerlink" title="二叉树的存储方式"></a>二叉树的存储方式</h2><p>对于满二叉树以及完全二叉树，完全可以采用数组的方式来存储，因为数组就是用来存储对于一对一线性规律的。所以完全合适<br><img src="https://file.chaobei.xyz/blogs/image_1583571439323.png_imagess" alt="image.png"></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583573501679.png_imagess" alt="image.png"></p>
+<p>对于没有元素的位置，使用<code>^</code> 空处位置。要是遇到刁钻一些的二叉树，例如下面这个，那直接很浪费空间。<br><img src="https://file.chaobei.xyz/blogs/image_1583574764389.png_imagess" alt="image.png"><br>这里面的灰色代表元素缺失，这样存储到数组里面的话，是很浪费内存空间的。<br><img src="https://file.chaobei.xyz/blogs/image_1583574780432.png_imagess" alt="image.png"></p>
+<h2 id="链式二叉树"><a href="#链式二叉树" class="headerlink" title="链式二叉树"></a>链式二叉树</h2><p>当然，我们既然不能用数组存储，那就使用指针存储。我们知道二叉树的定义里已经规定好，儿子节点不能超过两个，并且本身还需要是一个有序树<br><img src="https://file.chaobei.xyz/blogs/image_1583575304469.png_imagess" alt="image.png"></p>
+<p>每一个节点需要包含两个指针，用于指向左节点和右节点即可。中间则包含本节点的数据即可。这样相比于数组，我们之前也学习过链表、虽然数据不再是连续的，但是可以随意的增加节点、不会造成内存空间的浪费。</p>
+<h2 id="二叉树遍历"><a href="#二叉树遍历" class="headerlink" title="二叉树遍历"></a>二叉树遍历</h2><p>一个二叉树的遍历，是为了访问其所有的节点。有这样几种方式</p>
+<ul>
+<li>前序遍历</li>
+<li>中序遍历</li>
+<li>后序遍历</li>
+<li>层序遍历</li>
+</ul>
+<h3 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h3><p>通俗的说就是从二叉树的根节点出发，先访问当前节点的左节点，一直向下。直到当前节点没有左节点，再遍历右节点。<br><img src="https://file.chaobei.xyz/blogs/image_1583575304469.png_imagess" alt="image.png"></p>
+<p>我们按照当前图所示，简单讲解一下：</p>
+<ol>
+<li>从A根节点入手，打印A</li>
+<li>访问A节点的左节点 打印B</li>
+<li>访问当前节点的左节点，打印D</li>
+<li>D没有左右节点，本次遍历完成，访问B节点右分支 打印E</li>
+<li>E节点没有左右分支，遍历本节点结束。</li>
+<li>遍历A节点右分支，打印C</li>
+<li>C没有左右节点，A节点遍历完成。退出循环。</li>
+</ol>
+<p>以上的打印顺序应该是：<code>ABDEC</code></p>
+<h3 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h3><p>中序遍历，最大的特点就是：第二次到达节点输出内容，也是从左到右的顺序，从根节点出发。</p>
+<p>还是按照上面那张图：</p>
+<ol>
+<li>从A出发，找到B</li>
+<li>在B找到D</li>
+<li>D节点没有左右节点，打印D</li>
+<li>第二次回到B 打印B</li>
+<li>访问B节点右节点E</li>
+<li>E没有左右节点，第二次回到E  打印E</li>
+<li>B完成，回到A,打印A</li>
+<li>访问A右节点C,没有左右节点直接打印C</li>
+</ol>
+<p>经过以上打印访问，顺序为：<code>DBEAC</code></p>
+<h3 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h3><p>后序遍历，在原有中序遍历上稍微有些不同，当第<code>三次到达</code>节点时，才会输出，还是按照根节点入手，从左到右的方式。</p>
+<ol>
+<li>A节点入手，到达B</li>
+<li>B节点左节点，到达D</li>
+<li>D节点没有左右节点，直接打印D</li>
+<li>回到B节点，第二次到达，到E节点</li>
+<li>E节点没有左右节点，直接打印E</li>
+<li>回到B,第三次到达，打印B</li>
+<li>回到A 第二次到达，到达C</li>
+<li>直接打印C,回到A 第三次到达，打印A</li>
+</ol>
+<p>最后的顺序应该是：<code>DEBCA</code></p>
+<h3 id="层序遍历"><a href="#层序遍历" class="headerlink" title="层序遍历"></a>层序遍历</h3><p>之前已经说过了有关层次的相关概念。层序遍历，主要思路是：通过借助队列，从树的根节点开始，左右节点节点入队，每次队列中一个节点出队，直到所有的节点都出队。出队的先后顺序就是遍历的结果。<br><img src="https://file.chaobei.xyz/blogs/image_1583571530046.png_imagess" alt="image.png"></p>
+<p>按照这幅图来说明一下：</p>
+<ol>
+<li>首先根节点1入队。</li>
+<li>根节点1出队，同时将1的两个子节点<code>2,3</code>放入队列</li>
+<li>队列头2出队，将2节点的两个子节点<code>4,5</code>放入队列</li>
+<li>队列头3出队，同时将3的两个子节点<code>6,7</code>放入队列</li>
+<li>不断循环，直到队列为空。则遍历完成。</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过本节，应该了解到树这个重要的概念。以及树当中最常见的二叉树的遍历以及使用。并且了解字符串、数组等基本概念</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   target="_blank" rel="noopener" href="http://c.biancheng.net/view/3392.html" >http://c.biancheng.net/view/3392.html<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/a47d6ed886c8" >https://www.jianshu.com/p/a47d6ed886c8<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：数据结构-2-字符串-数组-二叉树以及遍历</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-21 14:49:35</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/21/数据结构-2-字符串-数组-二叉树以及遍历/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-3-%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91-%E7%BA%A2%E9%BB%91%E6%A0%91/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-3-二叉查找树-红黑树</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E7%BA%BF%E6%80%A7%E8%A1%A8%E8%AF%A6%E8%A7%A3/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-1-线性表详解</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%82%A8%E5%AD%98%E6%96%B9%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">字符串的储存方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BF-%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">BF 算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E6%A0%91"><span class="nav-number">3.</span> <span class="nav-text">结构树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.1.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E8%A7%84%E5%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">二叉树规律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.3.</span> <span class="nav-text">满二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.4.</span> <span class="nav-text">完全二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E6%80%A7%E8%B4%A8"><span class="nav-number">3.5.</span> <span class="nav-text">完全二叉树性质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">二叉树的存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">5.</span> <span class="nav-text">链式二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86"><span class="nav-number">6.</span> <span class="nav-text">二叉树遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">6.1.</span> <span class="nav-text">前序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">6.2.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">6.3.</span> <span class="nav-text">后序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">6.4.</span> <span class="nav-text">层序遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

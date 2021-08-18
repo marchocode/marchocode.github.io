@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            Docker-学习笔记8-Docker-Swarm集群搭建 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Docker-学习笔记8-Docker-Swarm集群搭建</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-20 17:19:28
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Docker学习笔记</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Docker/">Docker</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Docker-Swarm/">Docker Swarm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在前面的文章中，已经介绍如何在本地通过<code>Docker Machine</code> 创建虚拟Docker 主机，以及也可以在本地Windows 创建虚拟主机，也是可以使用的。这一节，我们将继续学习 Docker 三剑客之一 ： <code>Docker Swarm</code> </p>
+<h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><p>Docker Swarm 是Docker 的本地聚集类，它将一组Docker 主机转换为一个虚拟单独的 Docker 主机。Docker Swarm 使用标准的Docker API。所以与Docker 守护进程交互的工具都可以使用 Swarm 对多个主机进行转换扩展。 包括有：</p>
+<ul>
+<li>Docker Componse</li>
+<li>Docker Machine</li>
+<li>Dokku</li>
+</ul>
+<p>Docker Swarm 支持即插即用原则，随着初始开发的结束，API 开发起来支持可插后端。 这意味着您可以交换调度后端 Docker Swarm 使用的开箱即用与后端您喜欢。 Swarm 的可切换设计为大多数用例提供了一个平滑的开箱体验。</p>
+<h2 id="安装-Docker-Swarm"><a href="#安装-Docker-Swarm" class="headerlink" title="安装 Docker Swarm"></a>安装 Docker Swarm</h2><p>我们可以通过官方Docker Swarm 的镜像来创建一个集群，因为Docker Swarm 其实也是一个 <code>Docker images</code> </p>
+<p><code>docker run swarm --help</code> </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ docker run swarm --<span class="built_in">help</span></span><br><span class="line">Unable to find image <span class="string">&#x27;swarm:latest&#x27;</span> locally</span><br><span class="line">latest: Pulling from library/swarm</span><br><span class="line">d85c18077b82: Pull complete                                                                                             1e6bb16f8cb1: Pull complete                                                                                             85bac13497d7: Pull complete                                                                                             Digest: sha256:b866583a3b8791bcd705b7bc0fd94c66b695a1a2dbaeb5f59ed29940e5015dc8</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> swarm:latest</span><br><span class="line">Usage: swarm [OPTIONS] COMMAND [arg...]</span><br><span class="line"></span><br><span class="line">A Docker-native clustering system</span><br><span class="line"></span><br><span class="line">Version: 1.2.9 (527a849)</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  --debug                       debug mode [<span class="variable">$DEBUG</span>]</span><br><span class="line">  --log-level, -l <span class="string">&quot;info&quot;</span>        Log level (options: debug, info, warn, error, fatal, panic)</span><br><span class="line">  --experimental                <span class="built_in">enable</span> experimental features</span><br><span class="line">  --<span class="built_in">help</span>, -h                    show <span class="built_in">help</span></span><br><span class="line">  --version, -v                 <span class="built_in">print</span> the version</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  create, c     Create a cluster</span><br><span class="line">  list, l       List nodes <span class="keyword">in</span> a cluster</span><br><span class="line">  manage, m     Manage a docker cluster</span><br><span class="line">  join, j       Join a docker cluster</span><br><span class="line">  <span class="built_in">help</span>          Shows a list of commands or <span class="built_in">help</span> <span class="keyword">for</span> one <span class="built_in">command</span></span><br><span class="line"></span><br><span class="line">Run <span class="string">&#x27;swarm COMMAND --help&#x27;</span> <span class="keyword">for</span> more information on a <span class="built_in">command</span>.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为是第一次使用镜像，所以Docker Engine 会检查当前环境是否有这个镜像，没有则拉取了最新的版本到本地。</p>
+</blockquote>
+<h3 id="使用Docker-Swarm-镜像的好处"><a href="#使用Docker-Swarm-镜像的好处" class="headerlink" title="使用Docker Swarm 镜像的好处"></a>使用Docker Swarm 镜像的好处</h3><p>相比于其他方法，使用Swarm 镜像的好处在于</p>
+<ul>
+<li>不需要额外再系统上安装任何二进制执行文件来使用 Swarm</li>
+<li>可以通过docker engine 获取到最新版本</li>
+<li>容器与Swarm 环境隔离。不需要单独维护</li>
+</ul>
+<h2 id="创建具有交互式容器的集群"><a href="#创建具有交互式容器的集群" class="headerlink" title="创建具有交互式容器的集群"></a>创建具有交互式容器的集群</h2><p>集群，需要创建一个管理节点和工作节点。这里测试创建一个管理节点，在管理节点加入两个工作节点，这就组成一集群。</p>
+<h3 id="创建管理节点"><a href="#创建管理节点" class="headerlink" title="创建管理节点"></a>创建管理节点</h3><p><code>docker-machine ls</code> 查看现有虚拟主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ docker-machine.exe ls</span><br><span class="line">NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">default   *        virtualbox   Running   tcp://192.168.99.102:2376           v19.03.5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>发现已经有一个虚拟主机在运行，其实可以将这个主机作为管理主机</p>
+<p>通过 SSH 连接管理节点，在第一个虚拟机 创建管理节点</p>
+<p><code>docker-machine ssh default</code> 连接虚拟主机，开启Swarm</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker@default:~$ docker swarm init --advertise-addr 192.168.99.102</span><br><span class="line">Swarm initialized: current node (5mohlisxbrkogfbtzk6nujkfw) is now a manager.</span><br><span class="line"></span><br><span class="line">To add a worker to this swarm, run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    docker swarm join --token SWMTKN-1-4k26snh9hpamnpdpyk4qqogeolf6ing4u6e35jkjpwx83v9xcp-f2rhw7i7p9p0jeesvwb81xb9i 192.168.99.102:2377</span><br><span class="line"></span><br><span class="line">To add a manager to this swarm, run <span class="string">&#x27;docker swarm join-token manager&#x27;</span> and follow the instructions.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>docker swarm init --advertise-addr 192.168.99.102</code></p>
+<p>这里需要指定一个地址，因为虚拟机，通过<code>ip address</code> 可发现这个虚拟机有多个网卡，所以，我们需要指定一个地址。</p>
+<p>创建主节点后，可以获取到一个 Token 这个token 呢 就是我们需要创建 服务节点所需要用到的。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker swarm join --token SWMTKN-1-4k26snh9hpamnpdpyk4qqogeolf6ing4u6e35jkjpwx83v9xcp-f2rhw7i7p9p0jeesvwb81xb9i 192.168.99.102:2377</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>docker info</code> 后我们可以发现，当前Swarm 已经是活动的状态，管理节点 1 </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Swarm: active</span><br><span class="line"> NodeID: rzu7l3z4mysplwgdce8vj2364</span><br><span class="line"> Is Manager: <span class="literal">true</span></span><br><span class="line"> ClusterID: uuq50bc4x4bckqfglkrj05vao</span><br><span class="line"> Managers: 1</span><br><span class="line"> Nodes: 1</span><br><span class="line"> Default Address Pool: 10.0.0.0/8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>docker node ls</code> 可以查看当前节点信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker@default:~$ docker node ls</span><br><span class="line">ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION</span><br><span class="line">5mohlisxbrkogfbtzk6nujkfw *   default             Ready               Active              Leader              19.03.5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建工作节点"><a href="#创建工作节点" class="headerlink" title="创建工作节点"></a>创建工作节点</h3><p><code>docker-machine create work1 </code> 创建一个默认的VirtualBox VM 的虚拟主机。</p>
+<p><code>docker-machine ssh work1</code> 连接虚拟主机后，将本节点加入管理节点</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker@work1:~$ docker swarm join --token SWMTKN-1-4k26snh9hpamnpdpyk4qqogeolf6ing4u6e35jkjpwx83v9xcp-f2rhw7i7p9p0jeesvwb81xb9i 192.168.99.102:2377</span><br><span class="line">This node joined a swarm as a worker.</span><br></pre></td></tr></table></figure>
+<p>同样的，再创建一个work2 节点，加入到default 当中。</p>
+<h2 id="管理节点信息"><a href="#管理节点信息" class="headerlink" title="管理节点信息"></a>管理节点信息</h2><p>当前主机上，我们可以查看到所有的虚拟主机情况。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine.exe ls</span><br><span class="line">NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">default   *        virtualbox   Running   tcp://192.168.99.102:2376           v19.03.5</span><br><span class="line">work1     -        virtualbox   Running   tcp://192.168.99.103:2376           v19.03.5</span><br><span class="line">work2     -        virtualbox   Running   tcp://192.168.99.104:2376           v19.03.5</span><br></pre></td></tr></table></figure>
+
+<p>进入管理主机，查看节点的情况。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker node ls</span><br><span class="line">ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION</span><br><span class="line">5mohlisxbrkogfbtzk6nujkfw *   default             Ready               Active              Leader              19.03.5</span><br><span class="line">qqgd4abpjw08lwh31ddgez041     work1               Ready               Active                                  19.03.5</span><br><span class="line">gblxw2whlxl0k94nmfozhs7gl     work2               Ready               Active                                  19.03.5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="服务和任务关系"><a href="#服务和任务关系" class="headerlink" title="服务和任务关系"></a>服务和任务关系</h3><ul>
+<li>服务是一组任务的集合，一个服务可以有多个任务。</li>
+<li>任务是集群里面最小的一个单位，比如ping <a class="link"   target="_blank" rel="noopener" href="http://www.baidu.com/" >www.baidu.com<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+<h2 id="部署集群服务"><a href="#部署集群服务" class="headerlink" title="部署集群服务"></a>部署集群服务</h2><p><code>docker-machine ssh default</code> 连接管理主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker@default:~$ docker pull alpine</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from library/alpine</span><br><span class="line">c9b1b535fdd9: Pull complete                                                                                                                                                              Digest: sha256:ab00606a42621fb68f2ed6ad3c88be54397f981a7b70a79db3d1172b11c4367d</span><br><span class="line">Status: Downloaded newer image for alpine:latest</span><br><span class="line">docker.io/library/alpine:latest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>拉取一个 <code>alpine linux</code> 镜像</p>
+<blockquote>
+<p>Alpine 操作系统是一个面向安全的轻型 Linux 发行版。它不同于通常 Linux 发行版，Alpine 采用了 musl libc 和 busybox 以减小系统的体积和运行时资源消耗</p>
+</blockquote>
+<h3 id="部署任务"><a href="#部署任务" class="headerlink" title="部署任务"></a>部署任务</h3><blockquote>
+<p>docker service create [OPTIONS] IMAGE [COMMAND] [ARG…]</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service create --replicas 1  --name hello-world alpine ping www.baidu.com</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>--replicas</code> 指定任务的数量</li>
+<li><code>--name</code> 指定服务的名称</li>
+<li><code>alpine</code> 需要运行的镜像名称</li>
+<li><code>ping www.baidu.com</code> 镜像里面需要运行的命令</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker@default:~$ docker service create --replicas 1  --name hello-world alpine ping www.baidu.com</span><br><span class="line">nzr66u3j32ndgzodw08cer1he</span><br><span class="line">overall progress: 1 out of 1 tasks                                                                                                                                                       1/1: running[==================================================&gt;]                                                                                                                     verify: Service converged   </span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><p><code>docker service ps &lt;name&gt;</code> 查看服务的运行状态、以及进展</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker service ps hello-world</span><br><span class="line">ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS</span><br><span class="line">j03uhnoauhet        hello-world.1       alpine:latest       default             Running             Running 8 minutes ago</span><br></pre></td></tr></table></figure>
+
+<p><code>docker service ls</code> 查看当前Swarm 集群所运行的所有任务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker service ls</span><br><span class="line">ID                  NAME                MODE                REPLICAS            IMAGE               PORTS</span><br><span class="line">nzr66u3j32nd        hello-world         replicated          1/1                 alpine:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="监控服务"><a href="#监控服务" class="headerlink" title="监控服务"></a>监控服务</h3><p><code> docker service inspect --pretty hello-world</code> 命令可以概览服务的运行情况。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ID:             nzr66u3j32ndgzodw08cer1he</span><br><span class="line">Name:           hello-world</span><br><span class="line">Service Mode:   Replicated</span><br><span class="line"> Replicas:      1</span><br><span class="line">Placement:</span><br><span class="line">UpdateConfig:</span><br><span class="line"> Parallelism:   1</span><br><span class="line"> On failure:    pause</span><br><span class="line"> Monitoring Period: 5s</span><br><span class="line"> Max failure ratio: 0</span><br><span class="line"> Update order:      stop-first</span><br><span class="line">RollbackConfig:</span><br><span class="line"> Parallelism:   1</span><br><span class="line"> On failure:    pause</span><br><span class="line"> Monitoring Period: 5s</span><br><span class="line"> Max failure ratio: 0</span><br><span class="line"> Rollback order:    stop-first</span><br><span class="line">ContainerSpec:</span><br><span class="line"> Image:         alpine:latest@sha256:ab00606a42621fb68f2ed6ad3c88be54397f981a7b70a79db3d1172b11c4367d</span><br><span class="line"> Args:          ping www.baidu.com</span><br><span class="line"> Init:          <span class="literal">false</span></span><br><span class="line">Resources:</span><br><span class="line">Endpoint Mode:  vip</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="弹性伸缩"><a href="#弹性伸缩" class="headerlink" title="弹性伸缩"></a>弹性伸缩</h2><p><code>docker service update --replicas 2 hello-world</code> 将原来的服务任务数量改为2次</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker service update --replicas 2 hello-world</span><br><span class="line">hello-world</span><br><span class="line">overall progress: 2 out of 2 tasks                                                                                                                                                       1/2: running   [==================================================&gt;]                                                                                                                     2/2: running   [==================================================&gt;]                                                                                                                     verify: Service converged     </span><br></pre></td></tr></table></figure>
+
+<p><code>docker service ps &lt;name&gt;</code> 查看本次任务的运行情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker service ps hello-world</span><br><span class="line">ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS</span><br><span class="line">j03uhnoauhet        hello-world.1       alpine:latest       default             Running             Running 26 minutes ago</span><br><span class="line">k6oudbv4e9he        hello-world.2       alpine:latest       work1               Running             Running about a minute ago</span><br></pre></td></tr></table></figure>
+<p>这里将这两个任务分配到 <code>default</code> <code>work1</code> 节点</p>
+<p>查看 <code>work1</code> 节点运行情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">### 进入work1</span><br><span class="line">docker-machine ssh work1</span><br><span class="line"></span><br><span class="line">docker@work1:~$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS               NAMES</span><br><span class="line">1c86154f43f4        alpine:latest       &quot;ping www.baidu.com&quot;   4 minutes ago       Up 4 minutes                            hello-world.2.k6oudbv4e9henfqbhvulxt1y2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="从集群退出"><a href="#从集群退出" class="headerlink" title="从集群退出"></a>从集群退出</h3><p><code>docker swarm leave</code> 执行退出命令后，该节点已下线。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker@default:~$ docker node ls</span><br><span class="line">ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION</span><br><span class="line">5mohlisxbrkogfbtzk6nujkfw *   default             Ready               Active              Leader              19.03.5</span><br><span class="line">qqgd4abpjw08lwh31ddgez041     work1               Down                Active                                  19.03.5</span><br><span class="line">gblxw2whlxl0k94nmfozhs7gl     work2               Ready               Active                                  19.03.5</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/ityouknow/p/8903975.html" >https://www.cnblogs.com/ityouknow/p/8903975.html<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Docker-学习笔记8-Docker-Swarm集群搭建</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-20 17:19:28</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/20/Docker-学习笔记8-Docker-Swarm集群搭建/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09-Kubernetes-K8s-%E7%94%9F%E4%BA%A7%E7%BA%A7%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92-%E4%B8%8A/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记9-Kubernetes-(K8s)-生产级容器编排-上</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/20/Docker-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07-Docker-Machine/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Docker-学习笔记7-Docker-Machine</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Swarm"><span class="nav-number">2.</span> <span class="nav-text">Docker Swarm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Docker-Swarm"><span class="nav-number">3.</span> <span class="nav-text">安装 Docker Swarm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Docker-Swarm-%E9%95%9C%E5%83%8F%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">3.1.</span> <span class="nav-text">使用Docker Swarm 镜像的好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B7%E6%9C%89%E4%BA%A4%E4%BA%92%E5%BC%8F%E5%AE%B9%E5%99%A8%E7%9A%84%E9%9B%86%E7%BE%A4"><span class="nav-number">4.</span> <span class="nav-text">创建具有交互式容器的集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AE%A1%E7%90%86%E8%8A%82%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">创建管理节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E8%8A%82%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">创建工作节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AF"><span class="nav-number">5.</span> <span class="nav-text">管理节点信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%92%8C%E4%BB%BB%E5%8A%A1%E5%85%B3%E7%B3%BB"><span class="nav-number">5.1.</span> <span class="nav-text">服务和任务关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.</span> <span class="nav-text">部署集群服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E4%BB%BB%E5%8A%A1"><span class="nav-number">6.1.</span> <span class="nav-text">部署任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">6.2.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.3.</span> <span class="nav-text">监控服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9"><span class="nav-number">7.</span> <span class="nav-text">弹性伸缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%9B%86%E7%BE%A4%E9%80%80%E5%87%BA"><span class="nav-number">7.1.</span> <span class="nav-text">从集群退出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

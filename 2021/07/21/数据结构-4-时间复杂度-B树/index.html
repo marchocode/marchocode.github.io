@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            数据结构-4-时间复杂度-B树 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据结构-4-时间复杂度-B树</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-21 14:55:10
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/B-%E6%A0%91/">B-树</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/B-%E6%A0%91/">B+树</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.5k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>面试中，经常会问到有关于MYSQL 索引的相关概念，我们之前也都学过有关树的概念、以及二叉树、二叉查找树、红黑树等。这一节，来关注经常是数据库索引中使用的B-树</p>
+<p>在说这些之前，我们需要了解时间复杂度以及空间复杂度。</p>
+<h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>时间复杂度，用于鉴定一个算法的好坏、很多时候，比如跑一个for 循环一个数组排序，有冒泡、二分法等方法。相比于冒泡。二分法很占优势，为什么呢?因为比较的次数少、并且做的无用功少、所以这个算法就好。</p>
+<p>时间复杂度就是为了表示一个频繁度，这个频繁度怎么说呢。就是每执行一次循环，这就是一个频繁。</p>
+<p><code>O(频度)</code> 用O大写字符O表示，而不是零。</p>
+<p>常见时间复杂度依次从小到大：</p>
+<ol>
+<li>O(1) 常数阶</li>
+<li>O(logn) 对数阶</li>
+<li>O(n) 线性阶</li>
+<li>O(n的平方) 平方阶</li>
+<li>O(n的立方) 立方阶</li>
+<li>O(2的n次方) (指数阶)</li>
+</ol>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>空间复杂度，一般指占用的内存</p>
+<h2 id="时间换空间、空间换时间"><a href="#时间换空间、空间换时间" class="headerlink" title="时间换空间、空间换时间"></a>时间换空间、空间换时间</h2><p>这两个完全是可以等价交换的。比如我们想用</p>
+<p><code>消耗时间长、换取占用空间少</code> 这样会使应用程序响应变慢。但是占用内存少<br><code>消耗大量空间、换取快速的响应</code> 例子：谷歌浏览器</p>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h2><p>切记，这里不念做<code>B减数</code> 这里的横岗没有任何意思，就是B树。</p>
+<p>来说这个问题之前，首先了解一下：有关索引的简单内容。<br>我们都知道，索引，就是储存在本地磁盘上的一块数据结构，通过索引，我们能够快速查找数据库指定数据所在的位置。因为需要快速的查找出来。所以性能需要好的数据结构；例如：</p>
+<ol>
+<li>二叉查找树 时间复杂度 O(logN) </li>
+</ol>
+<p>一般情况下，二叉查找树以二分法查找，时间能够大大减少、一般遍历的最多次数就是二叉树的层级高度。</p>
+<p>我们在上面已经了解过有关时间换空间、空间换时间的概念了。所以数据库的索引必须让其快起来，那就必须使用空间去换取时间，一般的索引库都是很大的。几个G甚至更多。</p>
+<p>一般情况下，这么大的索引，我们没办法一次性读入到内存中。必须逐一加载的内存当中才可以。</p>
+<p>因为是磁盘，就会有读取和写入（IO）,使用二叉树虽然性能很高，但是不得不考虑磁盘的IO性能。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583571530046.png_imagess" alt="image"></p>
+<p>假设在使用二叉树来实现索引。我们查找的数字是<code>7</code> 最坏的情况下。也需要读取3次才可找到这个数字，那么有没有情况，就是把这个树的层级减少一些，我们读取的IO次数也就能减少。性能也就能提升。B-树就出来了</p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>将原来<code>瘦高</code>的二叉树变为<code>矮胖</code>的B-树。</p>
+<p>B树是一种多路平衡查找树。每一个节点最多包含K个孩子，而K又被称为是B树的阶。这个阶取决于磁盘页大小。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>假设这个磁盘决定的<code>B树阶为m</code></p>
+<ol>
+<li>根节点至少有两个子女。</li>
+<li>中间节点都包含（k-1）个元素和K个孩子，其中 <code>m/2 &lt;= k &lt;= m</code></li>
+</ol>
+<p>总结上面的话，就是说，这个k 就是节点的元素数量的范围取值范围在于<br><img src="https://file.chaobei.xyz/blogs/image_1583895501761.png_imagess" alt="image.png"></p>
+<p>总是不能大于阶，并且也不能少于阶的一半。</p>
+<ol start="3">
+<li>每一个叶子节点都包含(k-1)个元素，其中 <code>m/2 &lt;= k &lt;= m</code></li>
+<li>所有叶子节点都是位于同一层的</li>
+<li>每一个节点的元素从小到大排列，它的第（k-1）个元素正好是其k个孩子所包含元素的值域。（有点难以理解）</li>
+</ol>
+<h3 id="理解一下"><a href="#理解一下" class="headerlink" title="理解一下"></a>理解一下</h3><p><img src="https://file.chaobei.xyz/blogs/image_1583896271711.png_imagess" alt="image.png"></p>
+<p>画出一个B树，按照上面的条条框框 我们来说一下：</p>
+<ol>
+<li>B树根节点<code>9</code> 确实有两个子节点</li>
+<li>中间的节点都会包含的元素数=子节点数-1。</li>
+<li>比如<code>2 6</code> 这个元素的位置。</li>
+</ol>
+<p>我们假设当前的k=2,所以当前节点的k-1=1 第一个元素<code>2</code> 正好是第2个子元素<code>3,5</code>的值域划分。因为</p>
+<ol>
+<li>2 &lt; 3 &lt; 6</li>
+<li>2 &lt; 5 &lt; 6</li>
+</ol>
+<p>画个图，你就理解了。拿出原来的一小部分，我们来分析<br><img src="https://file.chaobei.xyz/blogs/image_1583911834786.png_imagess" alt="image.png"></p>
+<p>通过箭头的指向，将子元素插入到指定的位置，你会发现什么？？<br><img src="https://file.chaobei.xyz/blogs/image_1583911945644.png_imagess" alt="image.png"></p>
+<p>看到了么？变成了一个线性数组，并且已经排序好了的。<br><img src="https://file.chaobei.xyz/blogs/image_1583912023573.png_imagess" alt="image.png"></p>
+<h2 id="B-优势"><a href="#B-优势" class="headerlink" title="B- 优势"></a>B- 优势</h2><p>相比于二叉查找树，我们的B-树在缩短与硬盘的交互次数IO ,提升性能。每次只需要读取一个节点，通过本节点在内存中的交互，即可通过值域的方式确定当前的值在那个节点下，依次找寻即可。</p>
+<h2 id="B-树-插入元素"><a href="#B-树-插入元素" class="headerlink" title="B-树 插入元素"></a>B-树 插入元素</h2><p>假设我们插入一个<code>4</code>,通过遍历，我们发现，必须要插入到这个位置：</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583912673622.png_imagess" alt="image.png"></p>
+<p>若这样插入，其实是违反规则的，因为父节点<code>3，5</code>有两个元素，所以它应该有三个儿子节点才对，所以这样行不通，需要改变！</p>
+<p>往上方观察，<code>2,6</code> 已经是满节点的状态，并且根节点最多包含两个节点，那只能在根节点入手了。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1583896271711.png_imagess" alt="image.png"><br>就需要拆分节点和发生一系列的改变，其实还是很繁琐的。<br>这里只需要了解这个过程即可。不需要钻牛角尖<br><img src="https://file.chaobei.xyz/blogs/image_1583915426915.png_imagess" alt="image.png"></p>
+<h2 id="B树优势"><a href="#B树优势" class="headerlink" title="B树优势"></a>B树优势</h2><p>B树最大的优势就是自平衡<br>以及始终能够维持多路平衡，能够最大程度减少磁盘的IO次数而达到性能提升</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>那就是数据库索引了。以及文件系统。数据库这里常见的就是MongoDB 一款非关系型数据库。</p>
+<p>而我们常用的Mysql数据库则用的是B+树作为索引的。我们下来说一说。</p>
+<h2 id="B-树-1"><a href="#B-树-1" class="headerlink" title="B+树"></a>B+树</h2><p>所谓B+树，其实就是B树的Plus版本，更加牛皮，所以牛皮在哪儿呢？那无非就是查询性能上，查询快呗。</p>
+<p>既然是B树的一种扩展，那么肯定的，也包含B树该有的性质它都有，B+树有的一些性质，我们这里罗列一下：</p>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><p>假设这里存在一个m阶的B+树，</p>
+<ol>
+<li>有K个子节点的中间节点包含有K个元素，(B树这里是k-1),中间节点的元素不保存数据，只用来索引，所有的数据都保存在叶子节点。</li>
+<li>所有的叶子节点包含了全部的元素信息，以及指向这些元素的指针。叶子节点本身按照关键词的大小自小而大顺序排列。</li>
+<li>所有的中间节点元素都同时存在与子节点中。在子节点元素中是最大或者最小的元素。</li>
+</ol>
+<p>是不是很懵逼？懵逼就对了</p>
+<p>待会儿我们来解释一下，不要慌<br><img src="https://file.chaobei.xyz/blogs/image_1583917081553.png_imagess" alt="image.png"></p>
+<ol>
+<li>中间节点有三个元素，所以它有三个子节点。没毛病</li>
+<li>每个子节点都会包含父节点的一个元素，或者是最大。或者是最小。</li>
+<li>它的所有数据都是储存与叶子节点的，并且使用指针指向下一个叶子节点，形成一个<code>链表</code></li>
+</ol>
+<h3 id="为什么查询性能更优？"><a href="#为什么查询性能更优？" class="headerlink" title="为什么查询性能更优？"></a>为什么查询性能更优？</h3><p>我们知道，B树是为了减少磁盘IO而创建出来的，因为二叉树虽然快，但是内存空间有限，一下子读取不了那么多。那就必须按照磁盘页的大小，依次读取节点到内存中。在数据量相同的情况下，因为B树每个节点上都存在数据。而不一样的是，B+树只有在叶子节点才会存在数据，所以呢 同样的情况下，B+树的这种结构，一次性能够放入内存的节点数量就可以增加了。因为B+树中间节点放的是引用地址嘛，这样读取性能又能够翻一翻。</p>
+<ol>
+<li>单一节点储存了更多的元素。使得树更加矮胖，读取次数更少</li>
+<li>查询都需要到达叶子节点，而后通过链表遍历、更加迅速。</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>总结一下：为了什么发明出B树，因为通过空间换取时间的概念，索引是一个非常庞大的数据结构。而且</p>
+<p><code>电脑的内存大小有限</code> 不能一次性把二叉查找树读取进去，只能一点个节点一个节点的读取到里面。内存考虑完了。</p>
+<p><code>硬盘IO 速度</code> 因为索引的庞大，所以，在磁盘读取的时候，尽量使用少次的IO读取出我们需要的值，那就是最优解，所以呢，这个二叉树看起来很瘦高，要读取的IO数量太多了。所以呢？</p>
+<p>B树就被发明出来了。为了啥？让二叉查找树变得<code>矮胖</code>。减少IO次数</p>
+<p>B+树呢？作为B树的一个Plus版本。还是由于磁盘页的大小限制，只能读取少量的B树节点到内存中。因为B树节点就带有数据。而B+树就不一样了。因为中间节点不带数据，能够一次性读取好几个节点进去处理。所以呢，性能又提升了！</p>
+<p>奥利给！</p>
+<p>其实说了这么多，我们可以发现，所有的优化，是建立在当前磁盘不够、IO不够、内存不够大的基础上改善的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jRZMMONW3QP43dsDKIV9VQ" >https://mp.weixin.qq.com/s/jRZMMONW3QP43dsDKIV9VQ<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：数据结构-4-时间复杂度-B树</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-21 14:55:10</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/21/数据结构-4-时间复杂度-B树/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-5-%E5%93%88%E5%B8%8C%E8%A1%A8/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-5-哈希表</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-3-%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91-%E7%BA%A2%E9%BB%91%E6%A0%91/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-3-二叉查找树-红黑树</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%8D%A2%E7%A9%BA%E9%97%B4%E3%80%81%E7%A9%BA%E9%97%B4%E6%8D%A2%E6%97%B6%E9%97%B4"><span class="nav-number">4.</span> <span class="nav-text">时间换空间、空间换时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E6%A0%91"><span class="nav-number">5.</span> <span class="nav-text">B-树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">5.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E4%B8%80%E4%B8%8B"><span class="nav-number">5.3.</span> <span class="nav-text">理解一下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E4%BC%98%E5%8A%BF"><span class="nav-number">6.</span> <span class="nav-text">B- 优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E6%A0%91-%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0"><span class="nav-number">7.</span> <span class="nav-text">B-树 插入元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B%E6%A0%91%E4%BC%98%E5%8A%BF"><span class="nav-number">8.</span> <span class="nav-text">B树优势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">8.1.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-%E6%A0%91-1"><span class="nav-number">9.</span> <span class="nav-text">B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81"><span class="nav-number">9.1.</span> <span class="nav-text">特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E6%9B%B4%E4%BC%98%EF%BC%9F"><span class="nav-number">9.2.</span> <span class="nav-text">为什么查询性能更优？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

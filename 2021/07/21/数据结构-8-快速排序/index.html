@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="程序猿小码的个人小站">
+    <meta name="author" content="程序猿小码">
+    
+    <title>
+        
+            数据结构-8-快速排序 |
+        
+        三味书屋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"blogs.chaobei.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://file.chaobei.xyz/20210716162158.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"但行好事 莫问前程"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                三味书屋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据结构-8-快速排序</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://file.chaobei.xyz/20210716162158.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">程序猿小码</span>
+                        
+                            <span class="author-label">Architect</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-07-21 17:12:39
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/">基础算法</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">快速排序</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>快速排序与冒泡排序一样，同样是属于<code>交换排序</code> 叫做快速排序也是有原因的。因为它采用了<strong>分治法的概念</strong></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1588862421197.png_imagess" alt="image.png"></p>
+<p>其中最重要的一个概念就是 <code>基准元素</code></p>
+<blockquote>
+<p>冒泡排序每一轮将一个最大的元素挑选出并移动到右侧。</p>
+</blockquote>
+<h2 id="分治法思想"><a href="#分治法思想" class="headerlink" title="分治法思想"></a>分治法思想</h2><p>在每一轮当中。通过<strong>确定基准元素</strong>，将元素分为两部分，分别大于小于基准元素。而后的一轮中。还是通过<strong>原来</strong>的方式，在这两轮中继续找寻基准元素，直至不可再细分为止。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1588862377242.png_imagess" alt="image.png"></p>
+<p><strong>最重要的两个地方：</strong></p>
+<h3 id="基准元素的选择-pivot"><a href="#基准元素的选择-pivot" class="headerlink" title="基准元素的选择 pivot"></a>基准元素的选择 pivot</h3><p>基准元素的确认一般是选择当前数列的第一个元素,但这种方法确实不太靠谱，一般情况会通过随机选择的方式选择一个基准元素。这样一来，也能避免某些<code>特殊数列</code> 导致的时间复杂O(N^2);</p>
+<p>通过<strong>随机选择</strong>的方式，可以将时间复杂度调整至O(Nlogn);</p>
+<h3 id="元素的移动"><a href="#元素的移动" class="headerlink" title="元素的移动"></a>元素的移动</h3><p>通过随机的方式选择元素后，接下来就是元素的<code>移动</code></p>
+<blockquote>
+<p>移动就是将元素分别移动到基准元素两侧，左侧比基准元素小，右边则比基准元素大。</p>
+</blockquote>
+<p>这里有两种元素的移动方式：</p>
+<ol>
+<li>挖坑法</li>
+<li>指针交换法</li>
+</ol>
+<h2 id="挖坑法"><a href="#挖坑法" class="headerlink" title="挖坑法"></a>挖坑法</h2><p>拟定一个无序数列｛4,7,6,5,3,2,9,1｝要求将这个数列从小到大依次排列，我们采用挖坑法进行实现。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590372934852.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>挖坑法最重要的地点在于：指定左右指针（left,right）基准元素下标index。基准元素Pivot.</p>
+</blockquote>
+<p>假设我们通过随机法选择<code>基准元素Pivot = 4</code> 它的<code>下标index=1</code>表示一个坑,并且选择了左右的指针<code>left/right</code>。</p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590373359752.png_imagess" alt="image.png"></p>
+<p>1、从右边指针<code>right</code>开始 和基准元素进行比较。若右指针元素大于基准元素，则指针向下移动一位。若小于则将这个元素填入坑里面。将坑的位置记录下来。</p>
+<blockquote>
+<p>此时我们的右边指针元素<code>1&lt;4</code> 则将右边指针元素<code>1</code> 填入首位的坑<code>index</code><br>里面。这个时候因为1已经跑到首位去了。所以当前的位置就又成为了一个新的坑，接下来要操作左边指针<code>left</code> 将左边指针移动一位。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590374726843.png_imagess" alt="image.png"></p>
+<p>2、开始操作左指针<code>left</code></p>
+<blockquote>
+<p>通过比较<code>7&gt;4</code> 则移动元素，将7移动到坑里面。移动完后，原位置又变成一个新的坑。下面需要操作右边指针，将右边指针移动一位。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590375272247.png_imagess" alt="image.png"></p>
+<p>3、按照这样的思路。再次进行操作右边边指针。</p>
+<blockquote>
+<p>通过比较<code>9&gt;4</code> 则右边的元素已经大于基准元素。则无需移动位置。将右边指针移动一位即可。继续进行比较。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590375638835.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>当前右边指针<code>2&lt;4</code> 则将2填入到坑里面。原位置变成一个坑。左边指针移动一位，交换指针。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590375927919.png_imagess" alt="image.png"></p>
+<p>4、继续操作左边指针。</p>
+<blockquote>
+<p>元素<code>6&gt;4</code> 将元素6移动坑的位置。6位置再次成为一个坑，右边指针移动一位。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590382139595.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>元素<code>3&lt;4</code> 则将3元素移动到坑的位置。原位置变成坑，左边指针移动一位。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590382194293.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>开始操作左边指针 <code>5&gt;4</code> 将5元素移动到坑的位置。右边指针移动一位。发生指针重合。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590382292140.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>将基准元素移动到重合位置。交换结束。如下图所示</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590382362320.png_imagess" alt="image.png"></p>
+<h3 id="交换总结"><a href="#交换总结" class="headerlink" title="交换总结"></a>交换总结</h3><ol>
+<li>左右指针发生元素填坑后才进行交换指针操作（从左指针交换到右指针）</li>
+<li>左边指针的元素值大于基准元素则填坑。否则只做移动。</li>
+<li>右边指针的元素值小于基准元素则填坑。否则只做移动。</li>
+<li>发生填坑后，将另一个指针位置移动一位。</li>
+<li>指针重合则结束，将基准元素填充到重合位置。</li>
+</ol>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] array = &#123;<span class="number">4</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">1</span>&#125;;</span><br><span class="line"></span><br><span class="line">        sort(array, <span class="number">0</span>, array.length - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (start &gt;= end) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">int</span> pivotIndex = partition(array, start, end);</span><br><span class="line">	<span class="comment">//通过分治法将数列分成两份，各自再次递归</span></span><br><span class="line">        sort(array, start, pivotIndex - <span class="number">1</span>);</span><br><span class="line">        sort(array, pivotIndex + <span class="number">1</span>, end);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span> MRC</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span> 采用分治法 返回基准元素位置</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span> 17:52 2020/5/25</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span> [arr 被操作的数组, start 分治法起始位置, end 结束位置]</span></span><br><span class="line"><span class="comment">     **/</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//取首位为基准元素。//也是坑的位置</span></span><br><span class="line">        <span class="keyword">int</span> pivotIndex = start;</span><br><span class="line">        <span class="comment">//基准元素的值</span></span><br><span class="line">        <span class="keyword">int</span> pivot = arr[pivotIndex];</span><br><span class="line">        <span class="comment">//左边指针</span></span><br><span class="line">        <span class="keyword">int</span> left = start;</span><br><span class="line">        <span class="comment">//右边指针</span></span><br><span class="line">        <span class="keyword">int</span> right = end;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 大循环用于判断总体循环</span></span><br><span class="line"><span class="comment">         * 在左右指针指向同位置后</span></span><br><span class="line"><span class="comment">         * 结束循环</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">while</span> (right &gt;= left) &#123;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 右指针</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">while</span> (right &gt;= left) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (arr[right] &lt; pivot) &#123;</span><br><span class="line">                    arr[pivotIndex] = arr[right];</span><br><span class="line">                    pivotIndex = right;</span><br><span class="line">                    left++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 左指针</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">while</span> (right &gt;= left) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (arr[left] &gt; pivot) &#123;</span><br><span class="line">                    arr[pivotIndex] = arr[left];</span><br><span class="line">                    pivotIndex = left;</span><br><span class="line">                    right--;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[pivotIndex] = pivot;</span><br><span class="line">        <span class="keyword">return</span> pivotIndex;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="指针交换法"><a href="#指针交换法" class="headerlink" title="指针交换法"></a>指针交换法</h2><p>指针交换法相比于挖坑法，开局还是和挖坑法一样，元素的交换次数更少，效率相比于挖坑法有小幅度的提升。我们来了解一下指针交换法的逻辑。</p>
+<p>拿到一个数列 {4, 7, 6, 5, 3, 2, 9, 1}<br>我们定义左指针<code>left</code> 右指针<code>right</code> 以及首位取出的基准元素<code>pivot=4</code></p>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590461829065.png_imagess" alt="image.png"></p>
+<h3 id="交换要点"><a href="#交换要点" class="headerlink" title="交换要点"></a>交换要点</h3><ol>
+<li>从右指针开始循环</li>
+<li>右指针指向的元素<code>大于等于</code>基准元素，则右指针向左移动一位。<code>小于</code>则指针停下。换到左边指针操作。</li>
+<li>左指着指向的元素<code>小于等于</code>基准元素，则左指针向右移动一位。<code>大于</code>则指针停下、跳出循环。</li>
+<li>左指针停下后开始交换两个指针位置的元素。开始下次循环。</li>
+<li>指针重合大循环结束。重合位置和基准元素进行交换。</li>
+</ol>
+<h3 id="详细解说"><a href="#详细解说" class="headerlink" title="详细解说"></a>详细解说</h3><p>1、第一次循环</p>
+<blockquote>
+<p>右指针指向元素<code>1小于4</code> 则右边指针<code>不移动</code> 交换到左边指针，左边指针指向的元素<code>4小于等于4（基准元素）</code> 将左边指针移动一位。<br>当前指针指向元素<code>7&gt;4</code> 指针停下。</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590462798155.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>指针停下、开始交换元素。将左右指针位置的元素进行交换</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590462967131.png_imagess" alt="image.png"></p>
+<p>2、第二次循环</p>
+<blockquote>
+<p>重新到右指针，当前<code>7&gt;4</code> 左移一位。<br>到达<code>9</code>当前<code>9&gt;4</code> 左移一位。<br>到达<code>2</code> 当前<code>2&lt;4</code> 右边指针停下。</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590463628787.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>左指针，当前<code>1&lt;4</code> 右移一位。<br>到达<code>6</code>当前<code>6&gt;4</code> 左边指针停下。</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590463941209.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>交换两个位置的元素</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590464075429.png_imagess" alt="image.png"></p>
+<p>3、第三次循环</p>
+<blockquote>
+<p>右边指针移动到3停下<br>左边指针移动到5停下</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590464286656.png_imagess" alt="image.png"></p>
+<blockquote>
+<p>开始交换元素。</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590464425292.png_imagess" alt="image.png"></p>
+<p>4、第四次循环</p>
+<blockquote>
+<p>移动右指针，已经发生指针的重合，则将重合的位置的元素和基准元素进行交换。</p>
+</blockquote>
+<p><img src="https://file.chaobei.xyz/blogs/image_1590464538452.png_imagess" alt="image.png"></p>
+<h3 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = &#123;<span class="number">4</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">1</span>&#125;;</span><br><span class="line">        sort(array, <span class="number">0</span>, array.length - <span class="number">1</span>);</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (start &gt;= end) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> pivotIndex = partition(array, start, end);</span><br><span class="line">        sort(array, start, pivotIndex - <span class="number">1</span>);</span><br><span class="line">        sort(array, pivotIndex + <span class="number">1</span>, end);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//取首位为基准元素。//也是坑的位置</span></span><br><span class="line">        <span class="keyword">int</span> pivotIndex = start;</span><br><span class="line">        <span class="comment">//基准元素的值</span></span><br><span class="line">        <span class="keyword">int</span> pivot = array[pivotIndex];</span><br><span class="line">        <span class="comment">//左边指针</span></span><br><span class="line">        <span class="keyword">int</span> left = start;</span><br><span class="line">        <span class="comment">//右边指针</span></span><br><span class="line">        <span class="keyword">int</span> right = end;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (right != left) &#123;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 操作右指针</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">while</span> (right &gt; left &amp;&amp; pivot &lt; array[right]) &#123;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 操作左指针</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">while</span> (right &gt; left &amp;&amp; pivot &gt;= array[left]) &#123;</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 交换元素</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">if</span> (right &gt; left) &#123;</span><br><span class="line">                <span class="keyword">int</span> item = array[right];</span><br><span class="line">                array[right] = array[left];</span><br><span class="line">                array[left] = item;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 交换指针位置和基准元素</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        array[pivotIndex] = array[left];</span><br><span class="line">        array[left] = pivot;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过本节，我们研究了快速排序的两种实现方式。我们通过递归的方式实现分治法。通过挖坑交换元素和指针交换的方式分别实现快速排序。快速排序还是一个很重要的排序方法。通过本节的学习。应该了解到<code>分治法</code>这个重要的思想</p>
+<h2 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a>代码示例</h2><blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://gitee.com/mrc1999/Data-structure.git" >https://gitee.com/mrc1999/Data-structure.git<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：数据结构-8-快速排序</li>
+        <li>本文作者：程序猿小码</li>
+        <li>创建时间：2021-07-21 17:12:39</li>
+        <li>
+            本文链接：https://keep.xpoet.cn/2021/07/21/数据结构-8-快速排序/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-9-%E4%BA%8C%E5%8F%89%E5%A0%86/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-9-二叉堆</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-7-%E9%B8%A1%E5%B0%BE%E9%85%92%E6%8E%92%E5%BA%8F%E6%B3%95/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据结构-7-鸡尾酒排序法</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'thirGQOtvg66vYQFb9dHGwpY-gzGzoHsz',
+                    appKey: 'OT3o3Gp5NcgVfeedDceQsnNN',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '留下点什么吧~',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '程序猿小码';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2019</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">程序猿小码</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">快速排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%B2%BB%E6%B3%95%E6%80%9D%E6%83%B3"><span class="nav-number">2.</span> <span class="nav-text">分治法思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E5%85%83%E7%B4%A0%E7%9A%84%E9%80%89%E6%8B%A9-pivot"><span class="nav-number">2.1.</span> <span class="nav-text">基准元素的选择 pivot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-number">2.2.</span> <span class="nav-text">元素的移动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%96%E5%9D%91%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">挖坑法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%80%BB%E7%BB%93"><span class="nav-number">3.1.</span> <span class="nav-text">交换总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">代码示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E4%BA%A4%E6%8D%A2%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">指针交换法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E8%A6%81%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">交换要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E8%A7%A3%E8%AF%B4"><span class="nav-number">4.2.</span> <span class="nav-text">详细解说</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">4.3.</span> <span class="nav-text">代码示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2"><span class="nav-number">6.</span> <span class="nav-text">代码示例</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>
