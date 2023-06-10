@@ -11,7 +11,7 @@
   
   <title>
     
-      【工具】配置SSH免密登录，免密推送GIT 
+      【折腾】 小米10 lite zoom (青春版) 解锁刷入欧版系统 
       
       
       |
@@ -155,19 +155,19 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">【工具】配置SSH免密登录，免密推送GIT</div>
+      <div class="post-title">【折腾】 小米10 lite zoom (青春版) 解锁刷入欧版系统</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2022-07-30 08:48:21
+          2023-06-10 01:58:11
         </span>
         
               <span class="post-categories">
                 <i class="iconfont icon-bookmark" title="分类"></i>
                 
                 <span class="span--category">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7/" title="工具">
-                    <b>#</b> 工具
+                  <a href="/categories/%E6%8A%98%E8%85%BE/" title="折腾">
+                    <b>#</b> 折腾
                   </a>
                 </span>
                 
@@ -177,14 +177,14 @@
                 <i class="iconfont icon-tags mr-10" title="标签"></i>
                 
                 <span class="span--tag mr-8">
-                  <a href="/tags/SSH/" title="SSH">
-                    #SSH
+                  <a href="/tags/%E5%88%B7%E6%9C%BA/" title="刷机">
+                    #刷机
                   </a>
                 </span>
                 
                 <span class="span--tag mr-8">
-                  <a href="/tags/ssh-keygen/" title="ssh-keygen">
-                    #ssh-keygen
+                  <a href="/tags/Mi10liteZoom/" title="Mi10liteZoom">
+                    #Mi10liteZoom
                   </a>
                 </span>
                 
@@ -192,101 +192,66 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>你是否有如下的尴尬局面：</p>
-<ol>
-<li><p>添加一个新的仓库，推送GIT都要进行用户名和密码的输入。</p>
-</li>
-<li><p>新买了一台VPS服务器，又经常忘记密码。非常难受。</p>
-</li>
-</ol>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>使用 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Secure_Shell">安全外壳协议SSH</a> 可以在不安全的网络中为网络服务提供安全的传输环境。最常用的途径就是 SSH远程登录</p>
-<p>登录就含有多种身份认证，</p>
-<ol>
-<li><p>用户名+密码（常见）</p>
-</li>
-<li><p>非对称加密密钥。</p>
-</li>
-</ol>
-<h3 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h3><p>也叫做：公开<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86">密钥加密</a>。这个加密与解密的过程中，存在两个密钥；</p>
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>据说国内MIUI13已经内置某反诈软件了，还是使用外版本的系统放心一些。踩了一些坑后发现，MI 10 lite ZOOM(青春版) 是可以刷入外部系统的，但是只能刷入欧版，国际版我没找到相应的线刷包。</p>
+<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="https://file.chaobei.xyz/202306101020129.jpg_imagess"></p>
+<h2 id="开始刷机"><a href="#开始刷机" class="headerlink" title="开始刷机"></a>开始刷机</h2><p><strong>刷机有风险，操作需谨慎！！！</strong></p>
+<p><strong>刷机有风险，操作需谨慎！！！</strong></p>
+<p><strong>刷机有风险，操作需谨慎！！！</strong></p>
+<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><p>首先请备份你所有的资料，包括聊天记录等重要资料。</p>
 <ul>
-<li><p>私钥：非常重要，切勿保护好你的私钥，只能由你个人持有，不能外泄。</p>
-</li>
-<li><p>公钥：可以发放给任意你想要与之通信的设备。</p>
-</li>
+<li>聊天记录（微信登录电脑端后，迁移与备份）</li>
+<li>短信</li>
+<li>通讯录</li>
+<li>照片与视频</li>
+<li>操作前多三思。</li>
 </ul>
-<p>公钥与私钥之间形成 <code>N-1</code> 多对一的关系，无论公钥被复制多少份，但是它所对饮的私钥永远只有一份，并且要安全保护在你的手里。</p>
-<h3 id="加密与解密"><a href="#加密与解密" class="headerlink" title="加密与解密"></a>加密与解密</h3><p><img src="https://file.chaobei.xyz/202207301730830.png_imagess"></p>
-<p>通过公钥加密后的数据，只有与之对应的私钥才能解开。其他私钥无法解开。</p>
-<p>反过来。私钥加密的数据，所有的公钥都可以解开并查看到加密前的内容。</p>
-<p><img src="https://file.chaobei.xyz/202207301737868.png_imagess"></p>
-<h3 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h3><p>一般公钥和私钥默认存储在：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">linux</span> </span><br><span class="line">~/.ssh/id_rsa</span><br><span class="line">~/.ssh/id_rsa.pub</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">windows</span></span><br><span class="line">C:\Users\yourname\.ssh\id_rsa</span><br><span class="line">C:\Users\yourname\.ssh\id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p><code>id_rsa</code> 是私钥，<code>id_rsa.pub</code> 是公钥</p>
-<p>windows一般隐藏了.ssh文件夹，通过设置 <code>显示隐藏的文件夹</code></p>
-<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>通过 <code>ssh-keygen</code> 生成你的 <code>公钥</code> 与 <code>私钥</code> </p>
-<p>这里使用 <code>Windows</code> 环境下的 <code>Git-bash</code> 进行生成，省去安装其他软件。后面需要配置Git 通过密钥进行登录，所以请确保你的环境下已经安装了 <code>GIT</code></p>
-<p><a target="_blank" rel="noopener" href="https://git-scm.com/downloads">Git - Downloads</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">check your version</span></span><br><span class="line">git --version</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">generating</span></span><br><span class="line">ssh-kengen -b 4096</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@ecs-41794810:~/sshtest<span class="params">#</span> ssh-keygen -b 4096</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id<span class="built_in">_</span>rsa): </span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in /root/.ssh/id<span class="built_in">_</span>rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id<span class="built_in">_</span>rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br></pre></td></tr></table></figure>
-
-<p>输入命令后一路回车，使用默认的位置即可。<code>Enter passphr</code> 要求你输入一个密码，空着也行，输入一个也行，如果输入后，还请记清楚你的密码。</p>
-<p>生成完成后，切记一定保护好你的私钥！！！</p>
-<h2 id="SSH-Config"><a href="#SSH-Config" class="headerlink" title="SSH Config"></a>SSH Config</h2><h3 id="发送你的公钥到Git"><a href="#发送你的公钥到Git" class="headerlink" title="发送你的公钥到Git"></a>发送你的公钥到Git</h3><blockquote>
-<p>注意：这里是公钥，不是私钥，别搞错了。</p>
-</blockquote>
-<p>首先去Github,Gitee等地方配置你的公钥信息，后面要用作登录</p>
-<p>这里以Github为例。打开如下链接</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/settings/keys">Sign in to GitHub · GitHub</a> 点击 <code>New SSH Key</code> 将你<code>公钥</code>的内容粘贴到这个位置。</p>
-<p><img src="https://file.chaobei.xyz/202207301740359.png_imagess"></p>
-<p>保存即可。其他网站的配置都大同小异。</p>
-<h3 id="Copy到远程服务器"><a href="#Copy到远程服务器" class="headerlink" title="Copy到远程服务器"></a>Copy到远程服务器</h3><p>这里的远程服务器指的是，你买了一台VPS，或者是你手头有一台Linux需要通过SSHkey的方式链接。就需要做如下配置。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id yourname@host</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>yourname</code>: linux上有多个用户，需要将你的公钥分给哪个用户？比如root</p>
-</li>
-<li><p>host: 你的服务器所在的IP, 可以是公网IP，或者是本地私有IP，或者域名</p>
-</li>
-</ul>
-<p>输入密码即可上传到远端服务器。</p>
-<p>或者手动Copy也行, 将你的公钥放置到如下文件中，如有多个，换行放置。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置本地Config"><a href="#配置本地Config" class="headerlink" title="配置本地Config"></a>配置本地Config</h3><p>本地 <code>.ssh</code> 文件夹下创建 <code>config</code> 文件</p>
-<p>按照需要，加入所需要的内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># gitee</span><br><span class="line">Host gitee</span><br><span class="line">User git</span><br><span class="line">HostName gitee.com</span><br><span class="line"></span><br><span class="line"># github</span><br><span class="line">Host github</span><br><span class="line">User git</span><br><span class="line">HostName github.com</span><br><span class="line"></span><br><span class="line"># gitcode</span><br><span class="line">Host gitcode</span><br><span class="line">User git</span><br><span class="line">HostName gitcode.net</span><br><span class="line"></span><br><span class="line"># my merchine</span><br><span class="line">Host merchine</span><br><span class="line">User root</span><br><span class="line">Port 22</span><br><span class="line">HostName xxx.xxx.xxx.xxx</span><br></pre></td></tr></table></figure>
-
+<h3 id="解锁"><a href="#解锁" class="headerlink" title="解锁"></a>解锁</h3><p><a target="_blank" rel="noopener" href="https://www.miui.com/unlock/download.html">小米解锁工具</a></p>
+<p><img src="https://file.chaobei.xyz/202306101853169.png_imagess"></p>
+<p>下载小米官方的解锁工具，按照解锁工具的提示，登录，并且需要等待大概七天才能正常解锁。</p>
+<p><strong>解锁会删除用户数据，务必提前进行备份！！！</strong></p>
 <ol>
-<li><p>Host: 配置一个别名，方便我们使用</p>
-</li>
-<li><p>User: 配置登录的用户名</p>
-</li>
-<li><p>Hostname: 设置远程登录主机的地址，IP或者域名</p>
-</li>
-<li><p>Port: 端口号，默认22端口</p>
-</li>
-<li><p>IdentityFile: 私钥文件的位置，我们使用了默认位置，就无需设置</p>
-</li>
+<li>打开开发者选项：设置–我的设备，找到MIUI版本号，点击五次，提示已经进入开发者选项.</li>
+<li>进入“设置 -&gt; 开发者选项 -&gt; 设备解锁状态”中绑定账号和设备；</li>
+<li>关闭手机：手动进入Bootloader模式（关机后，同时按住开机键和音量下键）；</li>
+<li>通过USB连接手机，点击 “解锁”按钮；尽量选择主机后面板USB2.0 插槽。</li>
+<li>安装驱动，正常连接后进行解锁即可。</li>
+<li>等待重启。</li>
 </ol>
-<h2 id="愉快的使用"><a href="#愉快的使用" class="headerlink" title="愉快的使用"></a>愉快的使用</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">登录远程主机</span></span><br><span class="line">ssh your_host</span><br></pre></td></tr></table></figure>
+<p><img src="https://file.chaobei.xyz/202306101854246.png_imagess"></p>
+<h3 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h3><p>完成上一个步骤，重新进入系统后，应该是一片空白，和一个新手机一样，<strong>切勿登录任何账号</strong>，包括系统本身的ID.</p>
+<p>检查解锁状态：进入“设置 -&gt; 开发者选项 -&gt; 设备解锁状态”；（没找到开发者选项就重复上面打开开发者选项的步骤。）</p>
+<p>这是使用国外大神的归档软件包，<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/xiaomi-eu-multilang-miui-roms/files/xiaomi.eu/MIUI-STABLE-RELEASES/">Xiaomi.eu Multilang MIUI ROMs - Browse &#x2F;xiaomi.eu&#x2F;MIUI-STABLE-RELEASES at SourceForge.net</a></p>
+<p>按照你的手机系统选择对应的下载即可。我这里选择</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xiaomi.eu_multi_MI10LiteZoom_V13.0.9.0.SJVCNXM_v13-12-fastboot.zip</span><br></pre></td></tr></table></figure>
 
-<p>配置Git使用，则需要将你仓库的地址修改为ssh的形式</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin</span><br><span class="line">git remote add origin git@github.com:marchocode/orm-generator.git</span><br></pre></td></tr></table></figure>
+<p><strong>切记，手机的型号一定要确认准确。务必开启科学上网进行下载，不然速度会很慢。</strong> 下载后解压备用。</p>
+<ol>
+<li>手机关机，进入Fastboot模式，用数据线连接电脑。</li>
+<li>已经在解锁的时候安装过驱动了，这一步，直接跳过。</li>
+<li>进入解压后的刷机包文件夹。双击 <code>windows_fastboot_first_install_with_data_format.bat</code></li>
+<li>按照提示，键入 Y</li>
+<li>等待完成，手机重启。</li>
+</ol>
+<h3 id="Magisk"><a href="#Magisk" class="headerlink" title="Magisk"></a>Magisk</h3><p>首先安装 Magisk 软件，到 Github 主页下载最新软件包。<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">https://github.com/topjohnwu/Magisk/releases</a></p>
+<p>安装到手机后，从刚才解压的文件夹中提取对应的 boot.img 镜像文件，通过数据线保存到手机 download 文件夹，或者任意文件夹。</p>
+<p><img src="https://file.chaobei.xyz/202306101907857.png_imagess"></p>
+<p>打开手机，点击安装，修补一个文件，找到我们刚才复制的文件，开始修补，最后会生成一个文件到 download 中。</p>
+<p><img src="https://file.chaobei.xyz/202306101910765.png_imagess"></p>
+<p>连接手机，将刚才导出的文件复制到电脑端。大概如上图所示，<code>magisk_patched-xxxxxx.img</code> 文件，将其复制到我们刷机包如下位置：</p>
+<p><img src="https://file.chaobei.xyz/202306101915311.png_imagess"></p>
+<p>关闭手机，进入Fastboot模式，用数据线连接电脑。在上图位置打开 CMD 命令行。</p>
+<p>键入命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意，替换这行命令里面的文件名为你生成的文件名。</span></span><br><span class="line">fastboot.exe flash boot &lt;magisk_patched_xxxx.img&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">fastboot.exe reboot</span><br></pre></td></tr></table></figure>
 
-<p>以后不管换电脑还是什么。保存好你的 私钥文件与配置文件，即可忘掉那些琐碎的密码。</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Secure_Shell">https://zh.wikipedia.org/wiki/Secure_Shell</a></p>
-<p><a target="_blank" rel="noopener" href="https://git-scm.com/downloads">Git - Downloads</a></p>
-<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86">https://zh.wikipedia.org/wiki/%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.tecmint.com/configure-custom-ssh-connection-in-linux/">https://www.tecmint.com/configure-custom-ssh-connection-in-linux/</a></p>
+<p>到此，愉快的进行玩耍吧！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://miuiver.com/how-to-root-xiaomi-phone/">https://miuiver.com/how-to-root-xiaomi-phone/</a><br><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/xiaomi-eu-multilang-miui-roms/">https://sourceforge.net/projects/xiaomi-eu-multilang-miui-roms/</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/408114647">https://zhuanlan.zhihu.com/p/408114647</a></p>
 
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2022/07/28/bug-easyexcel-dependence/" target="_self">
+              <a href="/2022/07/30/ssh-config-generate/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
@@ -295,15 +260,15 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2022-07-30 08:48:21
+              2023-06-10 01:58:11
             </span>
             
                   <span class="post-categories">
                     <i class="iconfont icon-bookmark" title="分类"></i>
                     
                     <span class="span--category">
-                      <a href="/categories/%E5%B7%A5%E5%85%B7/" title="工具">
-                        <b>#</b> 工具
+                      <a href="/categories/%E6%8A%98%E8%85%BE/" title="折腾">
+                        <b>#</b> 折腾
                       </a>
                     </span>
                     
@@ -313,14 +278,14 @@
                     <i class="iconfont icon-tags mr-10" title="标签"></i>
                     
                     <span class="span--tag mr-8">
-                      <a href="/tags/SSH/" title="SSH">
-                        #SSH
+                      <a href="/tags/%E5%88%B7%E6%9C%BA/" title="刷机">
+                        #刷机
                       </a>
                     </span>
                     
                     <span class="span--tag mr-8">
-                      <a href="/tags/ssh-keygen/" title="ssh-keygen">
-                        #ssh-keygen
+                      <a href="/tags/Mi10liteZoom/" title="Mi10liteZoom">
+                        #Mi10liteZoom
                       </a>
                     </span>
                     
@@ -329,7 +294,7 @@
           </div>
           <div class="post-foot-prev">
             
-              <a href="/2023/06/10/mi-10-lite-zoom-china-to-eu/" target="_self">
+              <a href="/2023/06/10/hello-world/" target="_self">
                 <span>下一页</span>
                 <i class="iconfont icon-chevronright"></i>
               </a>
@@ -346,7 +311,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A6%81"><span class="toc-text">概要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-text">非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86"><span class="toc-text">加密与解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="toc-text">存储位置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B"><span class="toc-text">开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSH-Config"><span class="toc-text">SSH Config</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E4%BD%A0%E7%9A%84%E5%85%AC%E9%92%A5%E5%88%B0Git"><span class="toc-text">发送你的公钥到Git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Copy%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">Copy到远程服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0Config"><span class="toc-text">配置本地Config</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%89%E5%BF%AB%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">愉快的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-text">引用</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">写在前面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C"><span class="toc-text">最终效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E5%88%B7%E6%9C%BA"><span class="toc-text">开始刷机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD"><span class="toc-text">备份</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%94%81"><span class="toc-text">解锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B7%E6%9C%BA"><span class="toc-text">刷机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Magisk"><span class="toc-text">Magisk</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
       
     </div>
   </div>
@@ -657,12 +622,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E3%80%90%E5%B7%A5%E5%85%B7%E3%80%91%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%EF%BC%8C%E5%85%8D%E5%AF%86%E6%8E%A8%E9%80%81GIT + '&url=' + https%3A%2F%2Fblogs.chaobei.xyz%2F2022%2F07%2F30%2Fssh-config-generate%2F + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E3%80%90%E6%8A%98%E8%85%BE%E3%80%91%20%E5%B0%8F%E7%B1%B310%20lite%20zoom%20(%E9%9D%92%E6%98%A5%E7%89%88)%20%E8%A7%A3%E9%94%81%E5%88%B7%E5%85%A5%E6%AC%A7%E7%89%88%E7%B3%BB%E7%BB%9F + '&url=' + https%3A%2F%2Fblogs.chaobei.xyz%2F2023%2F06%2F10%2Fmi-10-lite-zoom-china-to-eu%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://blogs.chaobei.xyz/2022/07/30/ssh-config-generate/" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://blogs.chaobei.xyz/2023/06/10/mi-10-lite-zoom-china-to-eu/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
